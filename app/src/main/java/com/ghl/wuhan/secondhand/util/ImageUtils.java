@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class ImageUtils {
 
-    private static String TAG = "Test";
+    private static String TAG = "TAG";
     public static File tempFile;
 
     public static Uri getImageUri(Context content) {

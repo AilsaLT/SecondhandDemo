@@ -12,6 +12,9 @@ import java.util.Arrays;
  * 修改备注：
  * 版本：
  */
+
+/*商品列表类*/
+
 //解析goodsList
 public class Goods {
     private String goodsID;  //ID
@@ -22,15 +25,47 @@ public class Goods {
     private float quality;   //数量
     private String userid;   //发布人ID
     private byte[] goodsImg; //商品图片
+    private byte[] img;
+
+    private String goodstype; //商品所属类
+    private String goodsname; //商品名
+
 
     private String token;    //token
     private String goodsTypeName; //所属类名（可选字段）
     private int opType;     //操作类型（发布，维护等）
     private int sex;
 
-    private int currentPages;//当前页
-    private int datums;//数据条数
+//    private int currentPages;//当前页
+//    private int datums;//数据条数
 
+    public int page;//页数
+    protected int checkType;//查询方式 1---刷新  2---加载
+    public int pageSize;//数据条数
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(int checkType) {
+        this.checkType = checkType;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public byte[] getGoodsImg() {
         return goodsImg;
@@ -78,6 +113,14 @@ public class Goods {
 
     public void setGoodsID(String goodsID) {
         this.goodsID = goodsID;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 
     public String getGoodsType() {
@@ -128,39 +171,23 @@ public class Goods {
         this.userid = userid;
     }
 
-    public int getCurrentPages() {
-        return currentPages;
+
+
+    public String getGoodstype() {
+        return goodstype;
     }
 
-    public void setCurrentPages(int currentPages) {
-        this.currentPages = currentPages;
+    public void setGoodstype(String goodstype) {
+        this.goodstype = goodstype;
     }
 
-    public int getDatums() {
-        return datums;
+    public String getGoodsname() {
+        return goodsname;
     }
 
-    public void setDatums(int datums) {
-        this.datums = datums;
+    public void setGoodsname(String goodsname) {
+        this.goodsname = goodsname;
     }
 
-    @Override
-    public String toString() {
-        return "Goods{" +
-                "goodsID='" + goodsID + '\'' +
-                ", goodsType='" + goodsType + '\'' +
-                ", goodsName='" + goodsName + '\'' +
-                ", price=" + price +
-                ", unit='" + unit + '\'' +
-                ", quality=" + quality +
-                ", userid='" + userid + '\'' +
-                ", goodsImg=" + Arrays.toString(goodsImg) +
-                ", token='" + token + '\'' +
-                ", goodsTypeName='" + goodsTypeName + '\'' +
-                ", opType=" + opType +
-                ", sex=" + sex +
-                ", currentPages=" + currentPages +
-                ", datums=" + datums +
-                '}';
-    }
+
 }

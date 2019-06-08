@@ -25,13 +25,13 @@ import com.ghl.wuhan.secondhand.DO.SaleBO;
 import com.ghl.wuhan.secondhand.DO.UserVO;
 import com.ghl.wuhan.secondhand.R;
 import com.ghl.wuhan.secondhand.me_activity.me_user_login;
-import com.ghl.wuhan.secondhand.me_activity.me_user_register;
 import com.ghl.wuhan.secondhand.util.DialogUIUtils;
-import com.ghl.wuhan.secondhand.util.HttpUtil;
+import com.ghl.wuhan.secondhand.util.HttpUtils;
 import com.ghl.wuhan.secondhand.util.ImageUtils;
 import com.google.gson.Gson;
 import com.longsh.optionframelibrary.OptionBottomDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,8 +40,6 @@ import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Response;
-
-import static com.ghl.wuhan.secondhand.R.id.icon_image;
 
 public class find_sale_activity extends AppCompatActivity {
 
@@ -60,7 +58,7 @@ public class find_sale_activity extends AppCompatActivity {
     //销售商品
     private int opType = 90003;
     private String goodsID;//ID
-    private String goodsType;//商品所属类
+    private int goodsType;//商品所属类
     private String goodsName;//商品名
     private float price = 0.1f;// 价格
     private String unit = "台"; //单位
@@ -113,7 +111,7 @@ public class find_sale_activity extends AppCompatActivity {
                         String path = cursor.getString(columnIndex);  //获取照片路径
                         cursor.close();
                         Bitmap bitmap = BitmapFactory.decodeFile(path);
-                        //                        photo_taken.setImageBitmap(bitmap);
+                        //photo_taken.setImageBitmap(bitmap);
                         //设置照片存储文件及剪切图片
                         File saveFile = ImageUtils.setTempFile(find_sale_activity.this );
                         filePath = ImageUtils.getTempFile();
@@ -163,7 +161,8 @@ public class find_sale_activity extends AppCompatActivity {
         getGoodsType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                goodsType = (String) getGoodsType.getSelectedItem();
+               goodsType = position + 1;
+
 
             }
             @Override
@@ -224,8 +223,17 @@ public class find_sale_activity extends AppCompatActivity {
 
         //点击发布商品
         btn_submit.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
+                //设置进度条
+                progressDialog = DialogUIUtils.showLoadingDialog(find_sale_activity.this,"正在发布......");
+                progressDialog.show();
+                //点击物理返回键是否可取消dialog
+                progressDialog.setCancelable(true);
+                //点击dialog之外 是否可取消
+                progressDialog.setCanceledOnTouchOutside(false);
 
                 new Thread(new Runnable() {
                     @Override
@@ -243,14 +251,20 @@ public class find_sale_activity extends AppCompatActivity {
                         Log.i(TAG, "成功获取token==" + token);
                         Log.i(TAG, "成功获取uname==" + uname);
 
-                        //设置进度条
-                        progressDialog = DialogUIUtils.showLoadingDialog(find_sale_activity.this,"正在发布......");
-                        progressDialog.show();
-                        //点击物理返回键是否可取消dialog
-                        progressDialog.setCancelable(true);
-                        //点击dialog之外 是否可取消
-                        progressDialog.setCanceledOnTouchOutside(false);
-                        sale(opType, goodsID, goodsType, goodsName, price, unit, quality, userid, goodsImg, uname, uphone, sex, qq, weixin, token);
+//                        //设置进度条
+//                        progressDialog = DialogUIUtils.showLoadingDialog(find_sale_activity.this,"正在发布......");
+//                        progressDialog.show();
+//                        //点击物理返回键是否可取消dialog
+//                        progressDialog.setCancelable(true);
+//                        //点击dialog之外 是否可取消
+//                        progressDialog.setCanceledOnTouchOutside(false);
+
+                        //获取图片的byte[]
+                        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
+                        byte [] goodsImg  = Bitmap2Bytes(bitmap);
+                        Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
+
+                        sale(opType, goodsID, goodsType, goodsName, price, unit, quality, userid,goodsImg, uname, uphone, sex, qq, weixin, token);
                     }
                 }).start();
             }
@@ -259,10 +273,16 @@ public class find_sale_activity extends AppCompatActivity {
     }
 
     //将传入的参数转换成Json串使用
-    private void sale(int opType, String goodsID, String goodsType, String goodsName, float price,
-                      String unit, float quality, String userid,
-                      byte[] goodImg, String uname, String uphone,
+    private void sale(int opType, String goodsID, int goodsType, String goodsName, float price,
+                      String unit, float quality, String userid,byte[]goodsImg,
+                      String uname, String uphone,
                       int sex, String qq, String weixin, String token) {
+
+//        //获取图片的byte[]
+//        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
+//        byte [] goodsImg  = Bitmap2Bytes(bitmap);
+//        Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
+
 
         SaleBO userBO = new SaleBO();
         String uuid = UUID.randomUUID().toString();
@@ -275,7 +295,7 @@ public class find_sale_activity extends AppCompatActivity {
         userBO.setUnit(unit);
         userBO.setQuality(quality);
         userBO.setUserid(userid);
-        userBO.setGoodImg(goodImg);
+        userBO.setGoodsImg(goodsImg);
         userBO.setUname(uname);
         userBO.setUphone(uphone);
         userBO.setSex(sex);
@@ -287,10 +307,16 @@ public class find_sale_activity extends AppCompatActivity {
         String userJsonStr = gson.toJson(userBO, SaleBO.class);
         Log.i(TAG, "jsonStr is :" + userJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/sale";
-        HttpUtil.sendOkHttpRequest(url,userJsonStr, new okhttp3.Callback() {
+        HttpUtils.sendOkHttpRequest(url,userJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(find_sale_activity.this,"目前网络不佳！",Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
@@ -308,7 +334,7 @@ public class find_sale_activity extends AppCompatActivity {
                     userVO = gson.fromJson(s, UserVO.class);
                     int flag = userVO.getFlag();
 
-                    try{
+
                         if (flag == 200) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -335,15 +361,7 @@ public class find_sale_activity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }catch(Exception e){
-                        e.printStackTrace();
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Toast.makeText(find_sale_activity.this, "若想发布商品请输入具体信息！", Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-                    }
+
 
 
 
@@ -380,6 +398,13 @@ public class find_sale_activity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(saveToFile));
         Log.i( TAG, "startImageCrop: " + "即将跳到剪切图片" );
         startActivityForResult( intent, CROP_IMAGE );
+    }
+
+    // bitmp转bytes
+    public byte[] Bitmap2Bytes(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
     }
 
 

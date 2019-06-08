@@ -24,7 +24,8 @@ import com.ghl.wuhan.secondhand.DO.UserBO;
 import com.ghl.wuhan.secondhand.DO.UserVO;
 import com.ghl.wuhan.secondhand.R;
 import com.ghl.wuhan.secondhand.util.DialogUIUtils;
-import com.ghl.wuhan.secondhand.util.HttpUtil;
+import com.ghl.wuhan.secondhand.util.FileUtils;
+import com.ghl.wuhan.secondhand.util.HttpUtils;
 import com.ghl.wuhan.secondhand.util.ImageUtils;
 import com.google.gson.Gson;
 import com.longsh.optionframelibrary.OptionBottomDialog;
@@ -145,6 +146,8 @@ public class me_user_register extends AppCompatActivity {
 
         Log.i(TAG, "************onCreate init********");
 
+
+
         //点击弹出底部弹框，选择拍照或相册进行照片的选择
         icon_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +180,6 @@ public class me_user_register extends AppCompatActivity {
                                 startActivityForResult( picsIn, CHOOSE_PHOTO );
                                 //底部弹框消失
                                 optionBottomDialog.dismiss();
-
                                 break;
                             default:
                                 break;
@@ -186,8 +188,6 @@ public class me_user_register extends AppCompatActivity {
                 });
             }
         });
-
-
 
         //取消注册
         rl_back.setOnClickListener(new View.OnClickListener() {
@@ -261,12 +261,17 @@ public class me_user_register extends AppCompatActivity {
     //将对象转换成json串
     private void register(int opType, final String uname, String upassword, String uphone, int sex) {
 
+        //获取图片的byte[]
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
+        byte [] uimages  = Bitmap2Bytes(bitmap);
+        Log.i(TAG,"me_user_register中的bytes--->"+uimages);
+
         UserBO userBO = new UserBO();
         String uuid = UUID.randomUUID().toString();
         userBO.setUid(uuid);
         userBO.setUname(uname);
         userBO.setUpassword(upassword);
-//        userBO.setUimage(uimages);
+        userBO.setUimage(uimages);
         userBO.setOpType(opType);
         userBO.setSex(sex);
         userBO.setUphone(uphone);
@@ -277,7 +282,7 @@ public class me_user_register extends AppCompatActivity {
 
 
         String url = "http://47.105.183.54:8080/Proj20/register";
-        HttpUtil.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
+        HttpUtils.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());

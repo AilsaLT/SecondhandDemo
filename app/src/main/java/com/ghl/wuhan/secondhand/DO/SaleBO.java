@@ -16,13 +16,13 @@ import java.util.Arrays;
 public class SaleBO {
     private int opType;
     private String goodsID;//ID
-    private String goodsType;//商品所属类
+    private int goodsType;//商品所属类
     private String goodsName;//商品名
     private float price;// 价格
     private String unit; //单位
     private float quality;//数量
     private String userid;//发布人ID
-    private byte [] goodImg;//商品图片
+    private byte [] goodsImg;//商品图片
     private String uname;
     private String uphone;
     private int sex;
@@ -56,11 +56,11 @@ public class SaleBO {
         this.goodsID = goodsID;
     }
 
-    public String getGoodsType() {
+    public int getGoodsType() {
         return goodsType;
     }
 
-    public void setGoodsType(String goodsType) {
+    public void setGoodsType(int goodsType) {
         this.goodsType = goodsType;
     }
 
@@ -104,12 +104,12 @@ public class SaleBO {
         this.userid = userid;
     }
 
-    public byte[] getGoodImg() {
-        return goodImg;
+    public byte[] getGoodsImg() {
+        return goodsImg;
     }
 
-    public void setGoodImg(byte[] goodImg) {
-        this.goodImg = goodImg;
+    public void setGoodsImg(byte[] goodsImg) {
+        this.goodsImg = goodsImg;
     }
 
     public String getUname() {
@@ -160,25 +160,5 @@ public class SaleBO {
         this.token = token;
     }
 
-    @Override
-    public String toString() {
-        return "SaleBO{" +
-                "opType=" + opType +
-                ", goodsID='" + goodsID + '\'' +
-                ", goodsType='" + goodsType + '\'' +
-                ", goodsName='" + goodsName + '\'' +
-                ", price=" + price +
-                ", unit='" + unit + '\'' +
-                ", quality=" + quality +
-                ", userid='" + userid + '\'' +
-                ", goodImg=" + Arrays.toString(goodImg) +
-                ", uname='" + uname + '\'' +
-                ", uphone='" + uphone + '\'' +
-                ", sex=" + sex +
-                ", qq='" + qq + '\'' +
-                ", weixin='" + weixin + '\'' +
-                ", token='" + token + '\'' +
-                ", uid='" + uid + '\'' +
-                '}';
-    }
+
 }

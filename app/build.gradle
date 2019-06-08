@@ -42,4 +42,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.longsh:OptionFrame:1.0.0'//底部弹框
+    compile 'com.liaoinstan.springview:library:1.3.0'//刷新加载
 }

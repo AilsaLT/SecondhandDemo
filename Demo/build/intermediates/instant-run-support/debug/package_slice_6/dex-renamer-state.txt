@@ -1,0 +1,4 @@
+#Sun Nov 11 21:07:12 CST 2018
+base.0=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_6
+renamed.0=classes.dex
+file.0=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_6\\classes.dex

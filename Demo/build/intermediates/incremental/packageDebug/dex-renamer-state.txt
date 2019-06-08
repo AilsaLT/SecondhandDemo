@@ -1,0 +1,7 @@
+#Sun Nov 11 21:07:13 CST 2018
+base.0=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_5cd3441f7abc4d1150fb3b68b03240c6a833e1f7
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_4ff516c1059bd490921452292090526432d6e273\\classes.dex
+base.1=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_4ff516c1059bd490921452292090526432d6e273
+file.0=E\:\\AndroidData\\Lesson9\\Secondhand\\Demo\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_5cd3441f7abc4d1150fb3b68b03240c6a833e1f7\\classes.dex

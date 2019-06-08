@@ -12,6 +12,9 @@ import java.util.List;
  * 修改备注：
  * 版本：
  */
+
+/*商品类*/
+
 //解析查询商品中的复杂Json串
 public class ResponseBuy {
     private int flag;

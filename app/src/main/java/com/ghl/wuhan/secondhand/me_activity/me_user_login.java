@@ -17,7 +17,7 @@ import com.ghl.wuhan.secondhand.DO.UserVO;
 import com.ghl.wuhan.secondhand.MainActivity;
 import com.ghl.wuhan.secondhand.R;
 import com.ghl.wuhan.secondhand.util.DialogUIUtils;
-import com.ghl.wuhan.secondhand.util.HttpUtil;
+import com.ghl.wuhan.secondhand.util.HttpUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -145,7 +145,7 @@ public class me_user_login extends AppCompatActivity {
 
         String url = "http://47.105.183.54:8080/Proj20/login";
         //        sendRequest(url, userJsonStr);
-        HttpUtil.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
+        HttpUtils.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
@@ -195,6 +195,7 @@ public class me_user_login extends AppCompatActivity {
                             editor.clear();
                             editor.putBoolean("login",true);
                             editor.putString("uname",uname);
+                            editor.putString("token", token);
                         }
                         editor.commit();
 
@@ -232,6 +233,7 @@ public class me_user_login extends AppCompatActivity {
                         editor.clear();
                         editor.putBoolean("login",true);
                         editor.putString("uname",uname);
+                        editor.putString("token", token);
                     }
                     editor.commit();
 
