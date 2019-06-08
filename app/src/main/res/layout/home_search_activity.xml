@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="com.ghl.wuhan.secondhand.home_activity.home_search">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#0895e7">
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:iconifiedByDefault="false"
+            android:queryHint="搜索物品"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="#fff"/>
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="取消"
+            android:textColor="#fff"
+            android:background="#0895e7"/>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="510dp">
+
+    </RelativeLayout>
+
+
+</LinearLayout>

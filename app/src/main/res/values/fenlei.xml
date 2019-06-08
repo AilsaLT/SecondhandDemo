@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      <string-array name="fenlei">
+          <item>数码</item>
+          <item>衣服</item>
+          <item>日常用品</item>
+          <item>体育用品</item>
+          <item>电器</item>
+          <item>书籍</item>
+      </string-array>
+
+</resources>

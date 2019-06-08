@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/headline"
+        android:layout_width="match_parent"
+        android:layout_height="49.99dp"
+        android:background="@color/colorBule"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <View
+            android:id="@+id/blankwire1"
+            android:layout_centerHorizontal="true"
+            android:layout_height="1dp"
+            android:layout_width="102dp"
+            android:background="#fff"
+            android:layout_marginTop="9dp"
+            />
+
+        <View
+            android:id="@+id/blankwire2"
+            android:layout_centerVertical="true"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:background="#fff"
+            android:layout_toLeftOf="@+id/tv_tan"
+            />
+
+        <TextView
+            android:id="@+id/tv_tan"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:text="摊位"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/find_point"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_alignTop="@+id/image_ti"
+            android:layout_toLeftOf="@+id/blankwire3"
+            android:layout_toStartOf="@+id/blankwire3"/>
+
+
+        <View
+            android:id="@+id/blankwire3"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:background="#fff"
+            />
+
+        <TextView
+            android:id="@+id/tv_qiu"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:text="求购"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/find_point"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/blankwire3"
+            android:layout_centerVertical="true"/>
+
+        <View
+            android:id="@+id/blankwire4"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_qiu"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:background="#fff"
+            />
+
+        <View
+            android:id="@+id/blankwire5"
+            android:layout_width="102dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="39dp"
+            android:background="#fff"
+            />
+
+        <ImageView
+            android:id="@+id/image_ti"
+            android:clickable="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ti"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
