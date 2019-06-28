@@ -224,6 +224,7 @@ public class find_buy_activity extends AppCompatActivity {
         Log.i(TAG, "查询商品中buyJsonStr is :" + buyJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/buy";
         HttpUtils.sendOkHttpRequest(url,buyJsonStr, new okhttp3.Callback() {
+
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
