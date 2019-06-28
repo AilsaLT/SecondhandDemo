@@ -209,8 +209,6 @@ public class find_buy_activity extends AppCompatActivity {
 
 //获取数据
 
-
-
         private void getData(String token, int opType) {
         Goods goods = new Goods();
         goods.setToken(token);
