@@ -15,8 +15,11 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
+            android:clickable="true"
             android:background="@drawable/fanhui"/>
         <TextView
+            android:id="@+id/tv_back"
+            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:textColor="#fff"
@@ -87,7 +90,7 @@
             android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="价格："
+            android:text="商品单价："
             android:textSize="18sp"
             android:textColor="#847b7b"
             android:layout_alignParentBottom="true"
@@ -96,7 +99,7 @@
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et_price"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
@@ -140,15 +143,16 @@
             android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="联系方式："
+            android:text="商品单位："
             android:textSize="18sp"
             android:textColor="#847b7b"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"/>
+
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/et_unit"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -166,7 +170,7 @@
             android:id="@+id/text3"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="描述："
+            android:text="商品数量："
             android:textSize="18sp"
             android:textColor="#847b7b"
             android:layout_alignParentBottom="true"
@@ -174,8 +178,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"/>
         <EditText
-            android:id="@+id/editText3"
-            android:layout_width="300dp"
+            android:id="@+id/et_quality"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"

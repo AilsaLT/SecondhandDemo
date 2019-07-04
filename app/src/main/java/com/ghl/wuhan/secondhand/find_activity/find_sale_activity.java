@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ghl.wuhan.secondhand.DO.SaleBO;
@@ -61,7 +62,7 @@ public class find_sale_activity extends AppCompatActivity {
     private int goodsType;//商品所属类
     private String goodsName;//商品名
     private float price = 0.1f;// 价格
-    private String unit = "台"; //单位
+    private String unit; //单位
     private float quality = 1.0f;//数量
     private String userid;//发布人ID
     private byte[] goodsImg;//商品图片
@@ -72,7 +73,8 @@ public class find_sale_activity extends AppCompatActivity {
     private String weixin = "000";
     private String token;
     private Button btn_submit;
-    private EditText et_goodsName, et_price;
+    private EditText et_goodsName, et_price,et_unit,et_quality;
+    private TextView tv_back;
 
     //获取商品类型
     private Spinner getGoodsType;
@@ -154,7 +156,11 @@ public class find_sale_activity extends AppCompatActivity {
         btn_submit = (Button) findViewById(R.id.btn_submit);
         et_goodsName = (EditText) findViewById(R.id.et_goodsName);
         et_price = (EditText) findViewById(R.id.et_price);
+        et_unit = (EditText) findViewById(R.id.et_unit);
+        et_quality = (EditText) findViewById(R.id.et_quality);
         getGoodsType = (Spinner) findViewById(R.id.goods_Type);
+        tv_back = (TextView) findViewById(R.id.tv_back);
+
 
 
         //spanner
@@ -219,7 +225,12 @@ public class find_sale_activity extends AppCompatActivity {
                 finish();
             }
         });
-
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //点击发布商品
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +275,11 @@ public class find_sale_activity extends AppCompatActivity {
                         byte [] goodsImg  = Bitmap2Bytes(bitmap);
                         Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
 
-                        sale(opType, goodsID, goodsType, goodsName, price, unit, quality, userid,goodsImg, uname, uphone, sex, qq, weixin, token);
+                        //获取EditText上的商品单位和数量
+                        String unit = et_unit.getText().toString().trim();
+                        String quality = String.valueOf(et_quality.getText());
+
+                        sale(opType, goodsID, goodsType, goodsName, price, unit, Float.parseFloat(quality), userid,goodsImg, uname, uphone, sex, qq, weixin, token);
                     }
                 }).start();
             }

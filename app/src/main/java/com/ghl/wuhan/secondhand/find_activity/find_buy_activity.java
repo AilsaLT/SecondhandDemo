@@ -45,9 +45,9 @@ public class find_buy_activity extends AppCompatActivity {
     List<Goods> resultGoodsList = new ArrayList<Goods>();
 
     private SpringView springView;//下拉刷新，上拉加载的控件
-    public int page = 1;
-    protected int checkType = 1;
-    public int pageSize = 5;
+    public int page = 1;//页数
+    protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
+    public int pageSize = 5;//数据条数
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

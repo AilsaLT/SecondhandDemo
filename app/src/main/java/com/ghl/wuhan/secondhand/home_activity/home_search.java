@@ -11,5 +11,8 @@ public class home_search extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_search_activity);
+
+
     }
+
 }
