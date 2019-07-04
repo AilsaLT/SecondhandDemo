@@ -213,7 +213,7 @@ public class home_fragment extends Fragment implements OnBannerListener {
                                 getActivity().runOnUiThread( new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText( getActivity(),"登录信息已失效,请再次登录",Toast.LENGTH_SHORT ).show();
+                                            Toast.makeText( getActivity(),"登录信息已失效,请再次登录",Toast.LENGTH_SHORT ).show();
                                     }
                                 } );
                             }
