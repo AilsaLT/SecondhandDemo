@@ -14,6 +14,8 @@ import com.ghl.wuhan.secondhand.R;
 
 import java.util.List;
 
+import static com.ghl.wuhan.secondhand.R.id.img_goodsImg;
+
 /**
  * 项目名称：com.ghl.wuhan.secondhand.find_activity
  * 类描述：
@@ -39,7 +41,7 @@ public class Goods_Adapter extends RecyclerView.Adapter<Goods_Adapter.ViewHolder
         //获取布局中的实例，  这里的view是指RecyclerView的子项的最外层布局
         public ViewHolder(View view) {
             super( view );
-            goods_img = (ImageView)view.findViewById( R.id.img_goodsImg );
+            goods_img = (ImageView)view.findViewById( img_goodsImg );
             goodsID = (TextView) view.findViewById( R.id.tv_goodsId );
             goodsName = (TextView)view.findViewById( R.id.tv_goodsName );
             goods_price = (TextView)view.findViewById( R.id.tv_goodsPrice );
@@ -74,8 +76,14 @@ public class Goods_Adapter extends RecyclerView.Adapter<Goods_Adapter.ViewHolder
         Goods goods = mgoodsList.get( position );
         //设置数据
         byte[] img = goods.getGoodsImg();
-        Bitmap bitmap = BitmapFactory.decodeByteArray( img,0,img.length,null );
-        holder.goods_img.setImageBitmap( bitmap );
+
+        //若图片为空
+        if(img == null){
+            holder.goods_img.setImageResource(R.drawable.loading);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeByteArray( img,0,img.length,null );
+            holder.goods_img.setImageBitmap( bitmap );
+        }
         holder.goodsID.setText( goods.getGoodsID() );
         holder.goodsName.setText( goods.getGoodsName() );
         holder.goods_price.setText( ""+goods.getPrice() );

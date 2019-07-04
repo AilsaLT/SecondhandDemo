@@ -37,11 +37,10 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 public class home_fragment extends Fragment implements OnBannerListener {
-
+    private String TAG = "TAG";
     private Banner banner;
     private ArrayList<Integer> list_path;
     private ArrayList<String> list_title;
@@ -51,6 +50,7 @@ public class home_fragment extends Fragment implements OnBannerListener {
     //查询列表中的属性
     RecyclerView recyclerView;
     List<Goods> resultGoodsList = new ArrayList<Goods>();
+    List<Goods> allGoodsList = new ArrayList<Goods>();
     private SpringView springView;//下拉刷新，上拉加载的控件
     public int page = 1;//页数
     protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
@@ -198,14 +198,20 @@ public class home_fragment extends Fragment implements OnBannerListener {
                     final int flag = responseBuy.getFlag();
                     Log.i(TAG, "flag==" + flag);
                     resultGoodsList = responseBuy.getGoodsList();
-                    Log.i(TAG, "resultGoodsList==" + resultGoodsList);
+                    //Log.i(TAG, "resultGoodsList==" + resultGoodsList);
+
+                    //将上一次的resultGoodsList加进来显示
+                    for(int i = 0 ;i<resultGoodsList.size();i++){
+                        allGoodsList.add(resultGoodsList.get(i));
+                        Log.i(TAG, "onResponse: "+allGoodsList.size());
+                    }
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (flag == 200) {
                                 Log.i( TAG, "run: success" );
-                                Goods_Adapter adapter = new Goods_Adapter(resultGoodsList);
+                                Goods_Adapter adapter = new Goods_Adapter(allGoodsList);
                                 recyclerView.setAdapter(adapter);
                                 Toast.makeText( getActivity(),"查询成功！",Toast.LENGTH_SHORT ).show();
 

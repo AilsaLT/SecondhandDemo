@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="#0895e7">
         <ImageView
             android:id="@+id/iv_back"
@@ -15,8 +15,11 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
+            android:clickable="true"
             android:background="@drawable/fanhui"/>
         <TextView
+            android:id="@+id/tv_back"
+            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:textColor="#fff"
@@ -39,18 +42,144 @@
 
     </RelativeLayout>
 
-    <com.liaoinstan.springview.widget.SpringView
-        android:id="@+id/springView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="商品名称 ："
+            android:textSize="18sp"
+            android:textColor="#847b7b"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+        <EditText
+            android:id="@+id/et_goodsName"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1">-->
+        <!--<TextView-->
+            <!--android:id="@+id/text1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:text="商品单价："-->
+            <!--android:textSize="18sp"-->
+            <!--android:textColor="#847b7b"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_marginLeft="10dp"/>-->
+        <!--<EditText-->
+            <!--android:id="@+id/et_price"-->
+            <!--android:layout_width="250dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="10dp"/>-->
 
 
-    </com.liaoinstan.springview.widget.SpringView>
+    <!--</RelativeLayout>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="商品单位："
+            android:textSize="18sp"
+            android:textColor="#847b7b"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+
+        <EditText
+            android:id="@+id/et_unit"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="商品数量："
+            android:textSize="18sp"
+            android:textColor="#847b7b"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+        <EditText
+            android:id="@+id/et_quality"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="分类："
+            android:textSize="18sp"
+            android:textColor="#847b7b"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+        <Spinner
+            android:id="@+id/goods_Type"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:spinnerMode="dropdown"
+            android:entries="@array/fenlei"/>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+    </RelativeLayout>
+
 
 </LinearLayout>
