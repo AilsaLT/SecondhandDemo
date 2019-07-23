@@ -8,4 +8,6 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorBule">#0895e7</color>
 
+    <!--供EditText用-->
+    <color name="editText">#06f5d9</color>
 </resources>

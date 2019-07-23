@@ -17,10 +17,10 @@ public class sort_fragment extends Fragment {
 
     private RelativeLayout rl_mobile;
     private RelativeLayout rl_clothes;
-    private RelativeLayout rl_richang;
+    private RelativeLayout rl_books;
     private RelativeLayout rl_sports_goods;
     private RelativeLayout rl_electric;
-    private RelativeLayout rl_books;
+    private RelativeLayout rl_others;
 
     @Nullable
     @Override
@@ -34,14 +34,8 @@ public class sort_fragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //初始化
-        rl_mobile = getView().findViewById(R.id.rl_mobile);
-        rl_clothes = getView().findViewById(R.id.rl_clothes);
-        rl_richang = getView().findViewById(R.id.rl_richang);
-        rl_sports_goods = getView().findViewById(R.id.rl_sports_goods);
-        rl_electric = getView().findViewById(R.id.rl_electric);
-        rl_books = getView().findViewById(R.id.rl_books);
-
+        //初始化控件
+        init();
 
         rl_mobile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,11 +59,11 @@ public class sort_fragment extends Fragment {
         });
 
 
-        rl_richang.setOnClickListener(new View.OnClickListener() {
+        rl_books.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),sort_classify_activity.class);
-                intent.putExtra("Commoditype","分类：日常用品");
+                intent.putExtra("Commoditype","分类：书籍");
                 intent.putExtra("classifyType","3");
                 startActivity(intent);
             }
@@ -99,19 +93,24 @@ public class sort_fragment extends Fragment {
         });
 
 
-        rl_books.setOnClickListener(new View.OnClickListener() {
+        rl_others.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),sort_classify_activity.class);
-                intent.putExtra("Commoditype","分类：书籍");
+                intent.putExtra("Commoditype","分类：其它");
                 intent.putExtra("classifyType","6");
                 startActivity(intent);
             }
         });
+    }
 
-
-
-
-
+    //初始化控件
+    public void init(){
+        rl_mobile = getView().findViewById(R.id.rl_mobile);
+        rl_clothes = getView().findViewById(R.id.rl_clothes);
+        rl_books = getView().findViewById(R.id.rl_books);
+        rl_sports_goods = getView().findViewById(R.id.rl_sports_goods);
+        rl_electric = getView().findViewById(R.id.rl_electric);
+        rl_others = getView().findViewById(R.id.rl_others);
     }
 }

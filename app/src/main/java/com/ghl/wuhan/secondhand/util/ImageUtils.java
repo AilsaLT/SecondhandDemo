@@ -27,6 +27,11 @@ public class ImageUtils {
 
     private static String TAG = "TAG";
     public static File tempFile;
+    private static String name;
+
+    public static String getName() {
+        return name;
+    }
 
     public static Uri getImageUri(Context content) {
         File file = setTempFile(content);
@@ -48,7 +53,7 @@ public class ImageUtils {
 
     public static File setTempFile(Context content) {
         //自定义图片名称
-        String name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".png";
+        name = DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".png";
         Log.i(TAG, " name : " + name);
         //定义图片存放的位置
         tempFile = new File(content.getExternalCacheDir(), name);

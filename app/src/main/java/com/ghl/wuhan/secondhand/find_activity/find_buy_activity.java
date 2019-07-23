@@ -3,7 +3,11 @@ package com.ghl.wuhan.secondhand.find_activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,18 +16,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ghl.wuhan.secondhand.DO.SaleBO;
+import com.ghl.wuhan.secondhand.DO.BuyBO;
 import com.ghl.wuhan.secondhand.DO.UserVO;
 import com.ghl.wuhan.secondhand.R;
-import com.ghl.wuhan.secondhand.me_activity.me_user_login;
+import com.ghl.wuhan.secondhand.util.COSPictureUtils;
 import com.ghl.wuhan.secondhand.util.DialogUIUtils;
 import com.ghl.wuhan.secondhand.util.HttpUtils;
+import com.ghl.wuhan.secondhand.util.ImageUtils;
+import com.ghl.wuhan.secondhand.util.NetworkStateUtils;
 import com.google.gson.Gson;
+import com.longsh.optionframelibrary.OptionBottomDialog;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -33,8 +42,15 @@ public class find_buy_activity extends AppCompatActivity {
     //属性定义
     private String TAG = "TAG";
     private ImageView iv_back;//返回
-    private TextView tv_back;//返回
     private Button btn_submit;//点击提交
+
+    //拍照
+    private ImageView image_touxiang;
+    private Uri imageUri;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CHOOSE_PHOTO = 2;
+    public static final int CROP_IMAGE = 3;
+    private File filePath;
 
 
     //销售商品
@@ -43,31 +59,85 @@ public class find_buy_activity extends AppCompatActivity {
     private int goodsType;//商品所属类
     private String goodsName;//商品名
     private float price = 0.1f;// 价格
+    private String qq;//联系方式
     private String unit; //单位
     private float quality = 1.0f;//数量
     private String userid;//发布人ID
     private String token;
     private String uname;
 
-    private EditText et_goodsName,et_unit, et_quality;
+
+    private EditText et_goodsName, et_unit, et_price, et_quality, et_qq;
     private Spinner getGoodsType;//获取商品类型
     private Dialog progressDialog;//进度条
+    private String pictureUrl;//图片的Url
+
+    private boolean networkState;//判断网络状态
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    //将拍摄的照片的照片显示出来
+                    //需要对拍摄的照片进行处理编辑
+                    //拍照成功的话，就调用BitmapFactory的decodeStream()方法把图片解析成Bitmap对象，然后显示
+                    Log.i(TAG, "onActivityResult TakePhoto : " + imageUri);
+                    //Bitmap bitmap = BitmapFactory.decodeStream( getContentResolver().openInputStream( imageUri ) );
+                    //photo_taken.setImageBitmap( bitmap );
+                    //设置照片存储文件及剪切图片
+                    File saveFile = ImageUtils.getTempFile();
+                    filePath = ImageUtils.getTempFile();
+                    startImageCrop(saveFile, imageUri);
+                }
+                break;
+            case CHOOSE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    //选中相册照片显示
+                    Log.i(TAG, "onActivityResult: 执行到打开相册了");
+                    try {
+                        imageUri = data.getData(); //获取系统返回的照片的Uri
+                        Log.i(TAG, "onActivityResult: uriImage is " + imageUri);
+                        //设置照片存储文件及剪切图片
+                        File saveFile = ImageUtils.setTempFile(find_buy_activity.this);
+                        filePath = ImageUtils.getTempFile();
+                        startImageCrop(saveFile, imageUri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case CROP_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    Log.i(TAG, "onActivityResult: CROP_IMAGE" + "进入了CROP");
+                    Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
+                    //把裁剪后的图片展示出来
+                    image_touxiang.setImageBitmap(bitmap);
+                    //拍完照后，上传图片对象
+                    COSPictureUtils.initCOS(find_buy_activity.this);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_buy_activity);
 
-        //初始化部分
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        tv_back = (TextView) findViewById(R.id.tv_back);
-        btn_submit = (Button) findViewById(R.id.btn_submit);
-        et_goodsName = (EditText) findViewById(R.id.et_goodsName);
-        et_unit = (EditText) findViewById(R.id.et_unit);
-        et_quality = (EditText) findViewById(R.id.et_quality);
-        getGoodsType = (Spinner) findViewById(R.id.goods_Type);
+        //进来先判断网络状态
+        networkState = NetworkStateUtils.isNetworkConnected(find_buy_activity.this);
 
+        if(networkState == false  ){
+            Toast.makeText(find_buy_activity.this,"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
+        }
 
+        //初始化
+        init();
         //取消求购
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,107 +145,125 @@ public class find_buy_activity extends AppCompatActivity {
                 finish();
             }
         });
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-
         //spanner
         getGoodsType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 goodsType = position + 1;
-
-
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
+        image_touxiang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //具体实现部分
+                List<String> stringList = new ArrayList<String>();
+                stringList.add("拍照");
+                stringList.add("从相册选择");
+                final OptionBottomDialog optionBottomDialog = new OptionBottomDialog(find_buy_activity.this, stringList);
+                optionBottomDialog.setItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //选择调用手机相机拍照或在相册中选择照片的逻辑实现部分
+                        switch (position) {
+                            case 0:
+                                //选择调用手机相机
+                                Intent photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                imageUri = ImageUtils.getImageUri(find_buy_activity.this);
+                                Log.i(TAG, "find_sale_activity中的imageUri--->" + imageUri);
+                                //putExtra()指定图片的输出地址，填入之前获得的Uri对象
+                                photo.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                startActivityForResult(photo, TAKE_PHOTO);
+                                //底部弹框消失
+                                optionBottomDialog.dismiss();
+
+                                break;
+                            case 1:
+                                //选择相册
+                                Intent picsIn = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(picsIn, CHOOSE_PHOTO);
+                                //底部弹框消失
+                                optionBottomDialog.dismiss();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        });
 
         //点击发布商品
         btn_submit.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 //设置进度条
-                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this,"正在发布......");
+                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this, "正在发布......");
                 progressDialog.show();
                 //点击物理返回键是否可取消dialog
                 progressDialog.setCancelable(true);
                 //点击dialog之外 是否可取消
                 progressDialog.setCanceledOnTouchOutside(false);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //获取用户名和密码参数
-                        String goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
-                        Log.i(TAG, "成功获取goodsName==" + goodsName);
-                        //将存储在sp中的token拿到
-                        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                        String token = pref.getString("token", "");
-                        String uname = pref.getString("uname", "");
-                        userid = uname;
-                        Log.i(TAG, "成功获取token==" + token);
-                        Log.i(TAG, "成功获取uname==" + uname);
+                //获取用户名和密码参数
+                price = Float.parseFloat(et_price.getText().toString());
+                Log.i(TAG, "成功获取price==" + price);
+                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
+                Log.i(TAG, "成功获取goodsName==" + goodsName);
+                SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
+                token = pref.getString("token", "");    //将存储在sp中的token拿到
+                uname = pref.getString("uname", "");
+                userid = pref.getString("userid", "");
+                Log.i(TAG, "find_buy_activity中的userid--->" + userid);
+                Log.i(TAG, "成功获取token==" + token);
+                Log.i(TAG, "成功获取uname==" + uname);
+                //获取EditText上的商品单位和数量
+                unit = et_unit.getText().toString().trim();
+                quality = Float.parseFloat(String.valueOf(et_quality.getText()));
+                qq = et_qq.getText().toString().trim();
+                String uuid = UUID.randomUUID().toString();
+                pictureUrl = COSPictureUtils.getPitureUrl();
+                Log.i(TAG, "find_buy_activity中pictureUrl--->" + pictureUrl);
 
-                        //获取EditText上的商品单位和数量
-                        String unit = et_unit.getText().toString().trim();
-                        String quality = String.valueOf(et_quality.getText());
+                BuyBO buyBO = new BuyBO();
+                buyBO.setPrice(price);
+                buyBO.setGoodsName(goodsName);
+                buyBO.setToken(token);
+                buyBO.setUname(uname);
+                buyBO.setUserid(userid);
+                buyBO.setUnit(unit);
+                buyBO.setQuality(quality);
+                buyBO.setQq(qq);
+                buyBO.setUid(uuid);
+                buyBO.setOpType(opType);
+                buyBO.setGoodsID(goodsID);
+                buyBO.setGoodsType(goodsType);
+                buyBO.setPictureUrl(pictureUrl);
+                //发送OkHttp请求
+                buyGoods(buyBO);
 
-                        sale(opType, goodsID, goodsType, goodsName,unit, Float.parseFloat(quality), userid, uname, token);
-                    }
-                }).start();
             }
         });
     }
 
-
-    //将传入的参数转换成Json串使用
-    private void sale(int opType, String goodsID, int goodsType, String goodsName,
-                      String unit, float quality, String userid,
-                      String uname,String token) {
-
-        //        //获取图片的byte[]
-        //        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
-        //        byte [] goodsImg  = Bitmap2Bytes(bitmap);
-        //        Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
-
-
-        SaleBO userBO = new SaleBO();
-        String uuid = UUID.randomUUID().toString();
-        userBO.setUid(uuid);
-        userBO.setOpType(opType);
-        userBO.setGoodsID(goodsID);
-        userBO.setGoodsType(goodsType);
-        userBO.setGoodsName(goodsName);
-        userBO.setPrice(price);
-        userBO.setUnit(unit);
-        userBO.setQuality(quality);
-        userBO.setUserid(userid);
-        userBO.setUname(uname);
-        userBO.setToken(token);
-
-
+    //发送OkHttp请求
+    private void buyGoods(BuyBO buyBO) {
         Gson gson = new Gson();
-        String userJsonStr = gson.toJson(userBO, SaleBO.class);
-        Log.i(TAG, "jsonStr is :" + userJsonStr);
+        String buyJsonStr = gson.toJson(buyBO, BuyBO.class);
+        Log.i(TAG, "find_buy_actvity中需要传到后台的buyJsonStr is :" + buyJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/buy";
-        HttpUtils.sendOkHttpRequest(url,userJsonStr, new okhttp3.Callback() {
+        HttpUtils.sendOkHttpRequest(url, buyJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(find_buy_activity.this,"目前网络不佳！",Toast.LENGTH_LONG).show();
+                        Toast.makeText(find_buy_activity.this, "目前网络不佳！", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -186,13 +274,13 @@ public class find_buy_activity extends AppCompatActivity {
                     Log.d(TAG, "获取数据成功了");
                     Log.d(TAG, "response.code()==" + response.code());
 
-                    final String s = response.body().string();
-                    Log.d(TAG, "response.body().string()==" + s);
+                    final String buyGoodsJstr = response.body().string();
+                    Log.d(TAG, "find_buy_activity中buyGoodsJstr--->" + buyGoodsJstr);
 
                     //将response.code()转换成对象
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
-                    userVO = gson.fromJson(s, UserVO.class);
+                    userVO = gson.fromJson(buyGoodsJstr, UserVO.class);
                     int flag = userVO.getFlag();
 
 
@@ -203,8 +291,8 @@ public class find_buy_activity extends AppCompatActivity {
                                 Toast.makeText(find_buy_activity.this, "求购商品信息已发布成功！", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        Intent intent = new Intent(find_buy_activity.this, me_user_login.class);
-                        startActivity(intent);
+
+                        finish();
                     }
                     if (flag == 40001) {
                         runOnUiThread(new Runnable() {
@@ -224,12 +312,64 @@ public class find_buy_activity extends AppCompatActivity {
                     }
 
 
-
-
                 }
             }
         });
 
 
     }
+
+    //图片裁剪
+    private void startImageCrop(File saveToFile, Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        Log.i(TAG, "startImageCrop: " + "执行到压缩图片了" + "uri is " + uri);
+        intent.setDataAndType(uri, "image/*");//设置Uri及类型
+        //uri权限
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.putExtra("crop", "true");//
+        intent.putExtra("aspectX", 1);//X方向上的比例
+        intent.putExtra("aspectY", 1);//Y方向上的比例
+        intent.putExtra("outputX", 150);//裁剪区的X方向宽
+        intent.putExtra("outputY", 150);//裁剪区的Y方向宽
+        intent.putExtra("scale", true);//是否保留比例
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("return-data", false);//是否将数据保留在Bitmap中返回dataParcelable相应的Bitmap数据，防止造成OOM
+        //判断文件是否存在
+        //File saveToFile = ImageUtils.getTempFile();
+        if (!saveToFile.getParentFile().exists()) {
+            saveToFile.getParentFile().mkdirs();
+        }
+        //将剪切后的图片存储到此文件
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(saveToFile));
+        Log.i(TAG, "startImageCrop: " + "即将跳到剪切图片");
+        startActivityForResult(intent, CROP_IMAGE);
+    }
+
+    //初始化
+    public void init() {
+        image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
+        et_goodsName = (EditText) findViewById(R.id.et_goodsName);
+        et_unit = (EditText) findViewById(R.id.et_unit);
+        et_quality = (EditText) findViewById(R.id.et_quality);
+        et_price = (EditText) findViewById(R.id.et_price);
+        et_qq = (EditText) findViewById(R.id.et_qq);
+        getGoodsType = (Spinner) findViewById(R.id.goods_Type);
+    }
+
+    //防止Window Leaked窗体泄漏
+    //所以在关闭(finish)某个Activity前，要确保附属在上面的Dialog或PopupWindow已经关闭(dismiss)了。
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
 }

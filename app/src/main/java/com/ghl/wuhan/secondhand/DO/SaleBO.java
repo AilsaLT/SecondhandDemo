@@ -22,7 +22,8 @@ public class SaleBO {
     private String unit; //单位
     private float quality;//数量
     private String userid;//发布人ID
-    private byte [] goodsImg;//商品图片
+    private byte [] goodsImg;//商品图片，之前是之间将图片转换成byte[]进行存储，速度很慢，而且很占用内存控件
+    private String pictureUrl;//现在使用图片地址进行图片的存储，速度快，并且占用内存空间小
     private String uname;
     private String uphone;
     private int sex;
@@ -112,6 +113,14 @@ public class SaleBO {
         this.goodsImg = goodsImg;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
     public String getUname() {
         return uname;
     }
@@ -160,5 +169,26 @@ public class SaleBO {
         this.token = token;
     }
 
-
+    @Override
+    public String toString() {
+        return "SaleBO{" +
+                "opType=" + opType +
+                ", goodsID='" + goodsID + '\'' +
+                ", goodsType=" + goodsType +
+                ", goodsName='" + goodsName + '\'' +
+                ", price=" + price +
+                ", unit='" + unit + '\'' +
+                ", quality=" + quality +
+                ", userid='" + userid + '\'' +
+                ", goodsImg=" + Arrays.toString(goodsImg) +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", uname='" + uname + '\'' +
+                ", uphone='" + uphone + '\'' +
+                ", sex=" + sex +
+                ", qq='" + qq + '\'' +
+                ", weixin='" + weixin + '\'' +
+                ", token='" + token + '\'' +
+                ", uid='" + uid + '\'' +
+                '}';
+    }
 }

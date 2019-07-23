@@ -6,28 +6,70 @@
               android:layout_height="match_parent"
               tools:context="com.ghl.wuhan.secondhand.home_activity.home_search">
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:padding="10dp"
         android:background="#0895e7">
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:iconifiedByDefault="false"
-            android:queryHint="搜索物品"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30dp"
-            android:background="#fff"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_query"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:background="@drawable/layout_left_shape">
+            <Button
+                android:id="@+id/bt_query"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:textColor="#fff"
+                android:background="@drawable/home_query"/>
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:layout_toRightOf="@+id/rl_query"
+            android:hint="请输入搜索内容"/>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_clear"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:layout_toLeftOf="@+id/bt_cancel"
+            android:background="@drawable/layout_right_shape">
+
+            <Button
+                android:id="@+id/bt_clear"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:textColor="#fff"
+                android:layout_centerVertical="true"
+                android:background="@drawable/home_clear"/>
+
+        </RelativeLayout>
+
+
+
         <Button
-            android:id="@+id/back"
+            android:id="@+id/bt_cancel"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="取消"
             android:textColor="#fff"
             android:background="#0895e7"/>
+
+
 
 
     </RelativeLayout>
@@ -36,7 +78,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="510dp">
-
+        <ImageView
+            android:id="@+id/iv_networkbad"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/network_bad"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_tag_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent" />
     </RelativeLayout>
 
 

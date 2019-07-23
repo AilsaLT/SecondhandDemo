@@ -2,18 +2,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ghl.wuhan.secondhand">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+
+    <!--获取网络信息需要在AndroidManifest.xml文件中加入相应的权限-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <!-- if you want to load images from the internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- if you want to load images from a file OR from the internet -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <!--访问SD卡的权限-->
+    <!-- 访问SD卡的权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!-- 允许程序读取或写入系统设置(Allowsan application to read or write the system settings. ) -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_label"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -45,15 +55,33 @@
         </activity>
 
         <provider
-            android:authorities="com.ghl.wuhan.secondhand.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.ghl.wuhan.secondhand.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"
-                />
+                android:resource="@xml/file_paths"/>
         </provider>
+
+        <activity android:name=".goods_message.GoodsItemActivity">
+        </activity>
+        <activity android:name=".me_activity.me_boothActivity">
+        </activity>
+        <activity android:name=".me_activity.me_collectActivity">
+        </activity>
+        <activity android:name=".me_activity.me_aboutUsActivity">
+        </activity>
+        <activity android:name=".me_activity.me_buyActivity">
+        </activity>
+        <activity android:name=".personal_information.personal_Activity">
+        </activity>
+        <activity android:name=".me_activity.me_passwordChangeActivity">
+        </activity>
+        <activity android:name=".personal_information.personal_changeActivity">
+        </activity>
+        <activity android:name=".goods_message.GoodsCollectionActivity">
+        </activity>
     </application>
 
 </manifest>

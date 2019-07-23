@@ -13,6 +13,7 @@ package com.ghl.wuhan.secondhand.DO;
 
 public class UserVO {
     private int flag;//标志符
+    private int collectFlag;//2--已经收藏
 
     public int getFlag() {
         return flag;
@@ -20,5 +21,13 @@ public class UserVO {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public int getCollectFlag() {
+        return collectFlag;
+    }
+
+    public void setCollectFlag(int collectFlag) {
+        this.collectFlag = collectFlag;
     }
 }

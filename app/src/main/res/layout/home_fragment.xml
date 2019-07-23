@@ -53,7 +53,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#fff">
 
         <View
             android:layout_width="160dp"
@@ -84,6 +85,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_networkbad"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/network_bad"/>
         <com.liaoinstan.springview.widget.SpringView
             android:id="@+id/springView"
             android:layout_width="match_parent"

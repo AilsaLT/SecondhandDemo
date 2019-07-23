@@ -19,6 +19,7 @@ public class UserBO implements Serializable {
     private int sex;
     private String uphone;
     private String uid;
+    private String pictureUrl;//图片Url
 
     public String getToken() {
         return token;
@@ -84,18 +85,26 @@ public class UserBO implements Serializable {
         this.uimage = uimage;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
 
     @Override
     public String toString() {
         return "UserBO{" +
                 "opType=" + opType +
-                ", uid='" + uid + '\'' +
                 ", uname='" + uname + '\'' +
                 ", upassword='" + upassword + '\'' +
+                ", token='" + token + '\'' +
                 ", uimage=" + Arrays.toString(uimage) +
                 ", sex=" + sex +
                 ", uphone='" + uphone + '\'' +
-                ", token='" + token + '\'' +
+                ", uid='" + uid + '\'' +
+                ", pictureUrl='" + pictureUrl + '\'' +
                 '}';
     }
 }

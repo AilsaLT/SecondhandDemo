@@ -17,4 +17,10 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <!--设置EditText的颜色-->
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/editText</item>
+        <item name="colorControlActivated">@color/editText</item>
+    </style>
+
 </resources>

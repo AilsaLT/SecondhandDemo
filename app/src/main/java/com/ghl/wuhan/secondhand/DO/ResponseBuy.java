@@ -20,7 +20,25 @@ public class ResponseBuy {
     private int flag;
     private String message;
     private String token;
+    private String uname;
+
+    private String uphone;
+    private int sex;
+    private String qq;
+    private String weixin;
+
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    private int flagType;//1--摊位，2--求购
     private List<Goods> goodsList;
+
+
 
     private int opType;
 
@@ -56,6 +74,14 @@ public class ResponseBuy {
         this.token = token;
     }
 
+    public int getFlagType() {
+        return flagType;
+    }
+
+    public void setFlagType(int flagType) {
+        this.flagType = flagType;
+    }
+
     public List<Goods> getGoodsList() {
         return goodsList;
     }
@@ -64,13 +90,51 @@ public class ResponseBuy {
         this.goodsList = goodList;
     }
 
+    public String getUphone() {
+        return uphone;
+    }
+
+    public void setUphone(String uphone) {
+        this.uphone = uphone;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getWeixin() {
+        return weixin;
+    }
+
+    public void setWeixin(String weixin) {
+        this.weixin = weixin;
+    }
+
     @Override
     public String toString() {
         return "ResponseBuy{" +
                 "flag=" + flag +
                 ", message='" + message + '\'' +
                 ", token='" + token + '\'' +
-                ", goodList=" + goodsList +
+                ", uname='" + uname + '\'' +
+                ", uphone='" + uphone + '\'' +
+                ", sex=" + sex +
+                ", qq='" + qq + '\'' +
+                ", weixin='" + weixin + '\'' +
+                ", flagType=" + flagType +
+                ", goodsList=" + goodsList +
                 ", opType=" + opType +
                 '}';
     }

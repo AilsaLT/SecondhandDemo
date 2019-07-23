@@ -21,7 +21,6 @@ import com.ghl.wuhan.secondhand.Fragment.me_fragment;
 import com.ghl.wuhan.secondhand.Fragment.sort_fragment;
 
 import static android.text.TextUtils.isEmpty;
-import static com.ghl.wuhan.secondhand.R.drawable.me;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = badge.findViewById(R.id.texT);
         textView.setText(String.valueOf(9));
         //无消息时可以将它隐藏即可
-        textView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.INVISIBLE);
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(changeFragment);
@@ -85,43 +84,49 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
             Log.i("test", "item.getItemId() is :" + item.getItemId());
+            MyApplication application = (MyApplication) getApplication();//全局变量
 
-            switch (item.getItemId()) {
-                case R.id.navigation_home: {
-                    if (lastfragment != 0) {
-                        switchFragment(lastfragment, 0);
-                        lastfragment = 0;
+            if(application.isFlag() == true){//只有当前的fragment的网络请求结束后才能切换到下一个fragment
+                switch (item.getItemId()) {
+                    case R.id.navigation_home: {
 
+
+                        if (lastfragment != 0) {
+                            switchFragment(lastfragment, 0);
+                            lastfragment = 0;
+
+                        }
+
+                        return true;
+                    }
+                    case R.id.navigation_dashboard: {
+                        if (lastfragment != 1) {
+                            switchFragment(lastfragment, 1);
+                            lastfragment = 1;
+
+                        }
+
+                        return true;
+                    }
+                    case R.id.navigation_notifications: {
+                        if (lastfragment != 2) {
+                            switchFragment(lastfragment, 2);
+                            lastfragment = 2;
+
+                        }
+
+                        return true;
+                    }
+                    case R.id.navigation_me: {
+                        if (lastfragment != 3) {
+                            switchFragment(lastfragment, 3);
+                            lastfragment = 3;
+
+                        }
+
+                        return true;
                     }
 
-                    return true;
-                }
-                case R.id.navigation_dashboard: {
-                    if (lastfragment != 1) {
-                        switchFragment(lastfragment, 1);
-                        lastfragment = 1;
-
-                    }
-
-                    return true;
-                }
-                case R.id.navigation_notifications: {
-                    if (lastfragment != 2) {
-                        switchFragment(lastfragment, 2);
-                        lastfragment = 2;
-
-                    }
-
-                    return true;
-                }
-                case R.id.navigation_me: {
-                    if (lastfragment != 3) {
-                        switchFragment(lastfragment, 3);
-                        lastfragment = 3;
-
-                    }
-
-                    return true;
                 }
 
             }
@@ -153,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     //退出登录
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

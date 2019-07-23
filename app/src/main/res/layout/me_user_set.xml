@@ -4,38 +4,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     android:background="#f4f3f3">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:text="设置"
         android:textSize="20sp"
         android:textColor="#000"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:clickable="true"
         android:background="#f4f3f3"/>
     <TextView
+        android:id="@+id/tv_personal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="      账号安全"
+        android:layout_height="wrap_content"
+        android:text="个人信息"
+        android:padding="15dp"
         android:textSize="20sp"
         android:textColor="#000"
+        android:gravity="center_vertical"
         android:clickable="true"
         android:background="#fff"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp">
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+    </View>
+
+    <TextView
+        android:id="@+id/tv_password_change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="修改密码"
+        android:padding="15dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:background="#fff"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
     </View>
 
     <TextView
         android:id="@+id/login_out"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="      退出登录"
+        android:layout_height="wrap_content"
+        android:text="退出登录"
+        android:padding="15dp"
         android:textSize="20sp"
         android:textColor="#000"
+        android:gravity="center_vertical"
         android:clickable="true"
         android:background="#fff"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+    </View>
 </LinearLayout>

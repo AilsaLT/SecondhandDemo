@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ghl.wuhan.secondhand.personal_information.personal_Activity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#f5f5f7">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/personal_back_head"
+            android:clickable="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/iv_back"
+            android:text="个人信息"
+            android:textColor="#000"
+            android:textSize="20sp"/>
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/icon_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/navigation_four"
+            android:layout_toLeftOf="@+id/iv_avatar"
+            android:layout_centerVertical="true"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="头像"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+    <RelativeLayout
+        android:id="@+id/rl_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_nickname"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="昵称"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_nickname_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:layout_toLeftOf="@+id/iv_nickname"
+            android:text="昵称"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+    <RelativeLayout
+        android:id="@+id/rl_qq"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_qq"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_qq"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="QQ号"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_qq_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:layout_toLeftOf="@+id/iv_qq"
+            android:text="QQ号"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+    <RelativeLayout
+        android:id="@+id/rl_wichat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_wichat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_wichat"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="微信号"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_wichat_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:layout_toLeftOf="@+id/iv_wichat"
+            android:text="微信号"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+    <RelativeLayout
+        android:id="@+id/rl_phone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="电话"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_phone_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:layout_toLeftOf="@+id/iv_phone"
+            android:text="电话"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+    <RelativeLayout
+        android:id="@+id/rl_sex"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/iv_sex"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/personal_back"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_sex"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="性别"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_sex_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:layout_toLeftOf="@+id/iv_sex"
+            android:text="性别"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdddd">
+
+    </View>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:padding="10dp"
+        android:background="#f5f5f7">
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.ghl.wuhan.secondhand.DO;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Arrays;
 /*商品列表类*/
 
 //解析goodsList
-public class Goods {
+public class Goods implements Serializable {
     private String goodsID;  //ID
     private String goodsType; //商品所属类
     private String goodsName; //商品名
@@ -35,6 +36,8 @@ public class Goods {
     private String goodsTypeName; //所属类名（可选字段）
     private int opType;     //操作类型（发布，维护等）
     private int sex;
+    private String qq;
+    private String pictureUrl;//图片Url
 
 //    private int currentPages;//当前页
 //    private int datums;//数据条数
@@ -42,6 +45,8 @@ public class Goods {
     public int page;//页数
     protected int checkType;//查询方式 1---刷新  2---加载
     public int pageSize;//数据条数
+
+    public int flagType;//1--摊位，2--求购
 
     public int getPage() {
         return page;
@@ -189,5 +194,54 @@ public class Goods {
         this.goodsname = goodsname;
     }
 
+    public int getFlagType() {
+        return flagType;
+    }
 
+    public void setFlagType(int flagType) {
+        this.flagType = flagType;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "goodsID='" + goodsID + '\'' +
+                ", goodsType='" + goodsType + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", price=" + price +
+                ", unit='" + unit + '\'' +
+                ", quality=" + quality +
+                ", userid='" + userid + '\'' +
+                ", goodsImg=" + Arrays.toString(goodsImg) +
+                ", img=" + Arrays.toString(img) +
+                ", goodstype='" + goodstype + '\'' +
+                ", goodsname='" + goodsname + '\'' +
+                ", token='" + token + '\'' +
+                ", goodsTypeName='" + goodsTypeName + '\'' +
+                ", opType=" + opType +
+                ", sex=" + sex +
+                ", qq='" + qq + '\'' +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", page=" + page +
+                ", checkType=" + checkType +
+                ", pageSize=" + pageSize +
+                ", flagType=" + flagType +
+                '}';
+    }
 }

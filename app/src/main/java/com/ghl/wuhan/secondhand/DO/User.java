@@ -18,7 +18,7 @@ public class User {
     private String uname;
     private String upassword;
 
-    private byte[] uimage;
+
     private String uphone;
     private int sex;
     private String qq;
@@ -26,6 +26,9 @@ public class User {
 
     private String token; // 查询或更新用户时，需要用到token
     private int opType;//操作类型
+    private String userid;
+    private String pictureUrl;//图片Url
+    private byte[] uimage;
 
     public String getUid() {
         return uid;
@@ -107,19 +110,37 @@ public class User {
         this.opType = opType;
     }
 
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "uid='" + uid + '\'' +
                 ", uname='" + uname + '\'' +
                 ", upassword='" + upassword + '\'' +
-                ", uimage=" + Arrays.toString(uimage) +
                 ", uphone='" + uphone + '\'' +
                 ", sex=" + sex +
                 ", qq='" + qq + '\'' +
                 ", weixin='" + weixin + '\'' +
                 ", token='" + token + '\'' +
                 ", opType=" + opType +
+                ", userid='" + userid + '\'' +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", uimage=" + Arrays.toString(uimage) +
                 '}';
     }
 }

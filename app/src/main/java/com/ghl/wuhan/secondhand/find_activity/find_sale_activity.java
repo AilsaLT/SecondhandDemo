@@ -3,7 +3,6 @@ package com.ghl.wuhan.secondhand.find_activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -25,14 +24,14 @@ import android.widget.Toast;
 import com.ghl.wuhan.secondhand.DO.SaleBO;
 import com.ghl.wuhan.secondhand.DO.UserVO;
 import com.ghl.wuhan.secondhand.R;
-import com.ghl.wuhan.secondhand.me_activity.me_user_login;
+import com.ghl.wuhan.secondhand.util.COSPictureUtils;
 import com.ghl.wuhan.secondhand.util.DialogUIUtils;
 import com.ghl.wuhan.secondhand.util.HttpUtils;
 import com.ghl.wuhan.secondhand.util.ImageUtils;
+import com.ghl.wuhan.secondhand.util.NetworkStateUtils;
 import com.google.gson.Gson;
 import com.longsh.optionframelibrary.OptionBottomDialog;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ public class find_sale_activity extends AppCompatActivity {
 
     //属性定义部分
     private ImageView iv_back;
-    //打印日志
     private String TAG = "TAG";
     //拍照
     private ImageView image_touxiang;
@@ -55,7 +53,6 @@ public class find_sale_activity extends AppCompatActivity {
     public static final int CHOOSE_PHOTO = 2;
     public static final int CROP_IMAGE = 3;
     private File filePath;
-
     //销售商品
     private int opType = 90003;
     private String goodsID;//ID
@@ -65,22 +62,18 @@ public class find_sale_activity extends AppCompatActivity {
     private String unit; //单位
     private float quality = 1.0f;//数量
     private String userid;//发布人ID
-    private byte[] goodsImg;//商品图片
-    private String uname = "lt";
-    private String uphone = "15827630494";
-    private int sex = 0;
-    private String qq = "2926509946";
-    private String weixin = "000";
+    private String qq;
     private String token;
     private Button btn_submit;
-    private EditText et_goodsName, et_price,et_unit,et_quality;
+    private EditText et_goodsName, et_price,et_unit,et_quality,et_qq;
     private TextView tv_back;
-
+    //上传图片对象返回的Url
+    private static String pictureUrl;
     //获取商品类型
     private Spinner getGoodsType;
-
     private Dialog progressDialog;//进度条
 
+    private boolean networkState;//网络状态
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -90,8 +83,6 @@ public class find_sale_activity extends AppCompatActivity {
                     //需要对拍摄的照片进行处理编辑
                     //拍照成功的话，就调用BitmapFactory的decodeStream()方法把图片解析成Bitmap对象，然后显示
                     Log.i( TAG, "onActivityResult TakePhoto : "+imageUri );
-                    //Bitmap bitmap = BitmapFactory.decodeStream( getContentResolver().openInputStream( imageUri ) );
-                    //photo_taken.setImageBitmap( bitmap );
                     //设置照片存储文件及剪切图片
                     File saveFile = ImageUtils.getTempFile();
                     filePath = ImageUtils.getTempFile();
@@ -105,15 +96,6 @@ public class find_sale_activity extends AppCompatActivity {
                     try {
                         imageUri = data.getData(); //获取系统返回的照片的Uri
                         Log.i( TAG, "onActivityResult: uriImage is " +imageUri );
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                        Cursor cursor = getContentResolver().query(imageUri,
-                                filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String path = cursor.getString(columnIndex);  //获取照片路径
-                        cursor.close();
-                        Bitmap bitmap = BitmapFactory.decodeFile(path);
-                        //photo_taken.setImageBitmap(bitmap);
                         //设置照片存储文件及剪切图片
                         File saveFile = ImageUtils.setTempFile(find_sale_activity.this );
                         filePath = ImageUtils.getTempFile();
@@ -126,13 +108,12 @@ public class find_sale_activity extends AppCompatActivity {
             case CROP_IMAGE:
                 if(resultCode == RESULT_OK){
                     Log.i( TAG, "onActivityResult: CROP_IMAGE" + "进入了CROP");
-                    // 通过图片URI拿到剪切图片
-                    //bitmap = BitmapFactory.decodeStream( getContentResolver().openInputStream( imageUri ) );
-                    //通过FileName拿到图片
+
                     Bitmap bitmap = BitmapFactory.decodeFile( filePath.toString() );
                     //把裁剪后的图片展示出来
                     image_touxiang.setImageBitmap( bitmap );
-                    //ImageUtils.Compress( bitmap );
+                    //上传图片对象
+                    COSPictureUtils.initCOS(find_sale_activity.this);
                 }
                 break;
             default:
@@ -147,29 +128,22 @@ public class find_sale_activity extends AppCompatActivity {
         //这两句必须放在super.onCreate(savedInstanceState);之后， setContentView(contentView);之前
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
         View contentView = LayoutInflater.from(this).inflate(R.layout.me_user_register, null);
-
         setContentView(R.layout.find_sale_activity);
 
+        //进来先判断网络状态
+        networkState = NetworkStateUtils.isNetworkConnected(find_sale_activity.this);
+        if(networkState == false){
+            Toast.makeText(find_sale_activity.this,"你的网络在开小差哦",Toast.LENGTH_SHORT).show();
+      }
+
         //初始化
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
-        btn_submit = (Button) findViewById(R.id.btn_submit);
-        et_goodsName = (EditText) findViewById(R.id.et_goodsName);
-        et_price = (EditText) findViewById(R.id.et_price);
-        et_unit = (EditText) findViewById(R.id.et_unit);
-        et_quality = (EditText) findViewById(R.id.et_quality);
-        getGoodsType = (Spinner) findViewById(R.id.goods_Type);
-        tv_back = (TextView) findViewById(R.id.tv_back);
-
-
+        init();
 
         //spanner
         getGoodsType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                goodsType = position + 1;
-
-
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -177,6 +151,7 @@ public class find_sale_activity extends AppCompatActivity {
             }
         });
 
+        //点击进行拍照
         image_touxiang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,16 +200,10 @@ public class find_sale_activity extends AppCompatActivity {
                 finish();
             }
         });
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
 
         //点击发布商品
         btn_submit.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
@@ -246,83 +215,66 @@ public class find_sale_activity extends AppCompatActivity {
                 //点击dialog之外 是否可取消
                 progressDialog.setCanceledOnTouchOutside(false);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //获取用户名和密码参数
-                        String goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
-                        float price = Float.parseFloat(et_price.getText().toString());
-                        Log.i(TAG, "成功获取goodsName==" + goodsName);
-                        Log.i(TAG, "成功获取price==" + price);
-                        //将存储在sp中的token拿到
-                        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                        String token = pref.getString("token", "");
-                        String uname = pref.getString("uname", "");
-                        userid = uname;
-                        Log.i(TAG, "成功获取token==" + token);
-                        Log.i(TAG, "成功获取uname==" + uname);
+                SaleBO saleBO = new SaleBO();
 
-//                        //设置进度条
-//                        progressDialog = DialogUIUtils.showLoadingDialog(find_sale_activity.this,"正在发布......");
-//                        progressDialog.show();
-//                        //点击物理返回键是否可取消dialog
-//                        progressDialog.setCancelable(true);
-//                        //点击dialog之外 是否可取消
-//                        progressDialog.setCanceledOnTouchOutside(false);
+                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
+                price = Float.parseFloat(et_price.getText().toString());
+                Log.i(TAG, "成功获取goodsName==" + goodsName);
+                Log.i(TAG, "成功获取price==" + price);
+                //将存储在sp中的token拿到
+                //获取用户名和token
+                SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
+                token = pref.getString("token", "");
+                Log.i(TAG, "成功获取token==" + token);
 
-                        //获取图片的byte[]
-                        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
-                        byte [] goodsImg  = Bitmap2Bytes(bitmap);
-                        Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
+                userid = pref.getString("userid", "");
+                Log.i(TAG, "userid==" + userid);
 
-                        //获取EditText上的商品单位和数量
-                        String unit = et_unit.getText().toString().trim();
-                        String quality = String.valueOf(et_quality.getText());
+                //获取EditText上的商品单位和数量
+                unit = et_unit.getText().toString().trim();
+                quality = Float.parseFloat(String.valueOf(et_quality.getText()));
+                qq = et_qq.getText().toString().trim();
+                pictureUrl = COSPictureUtils.getPitureUrl();
+                Log.i("TAG","find_sale_activity中pictureUrl--->"+pictureUrl);
 
-                        sale(opType, goodsID, goodsType, goodsName, price, unit, Float.parseFloat(quality), userid,goodsImg, uname, uphone, sex, qq, weixin, token);
-                    }
-                }).start();
+                //判断用户输入的信息是否为空
+//                if(goodsName == null || price)
+
+
+                saleBO.setGoodsName(goodsName);
+                saleBO.setPrice(price);
+                saleBO.setToken(token);
+                saleBO.setUserid(userid);
+                saleBO.setUnit(unit);
+                saleBO.setQuality(quality);
+                saleBO.setQq(qq);
+                saleBO.setPictureUrl(pictureUrl);
+
+                String uuid = UUID.randomUUID().toString();
+                saleBO.setUid(uuid);
+
+                saleBO.setOpType(opType);
+                saleBO.setGoodsID(goodsID);
+                saleBO.setGoodsType(goodsType);
+
+                //发送OkHttp请求
+                sale(saleBO);
+
             }
         });
 
     }
-
-    //将传入的参数转换成Json串使用
-    private void sale(int opType, String goodsID, int goodsType, String goodsName, float price,
-                      String unit, float quality, String userid,byte[]goodsImg,
-                      String uname, String uphone,
-                      int sex, String qq, String weixin, String token) {
-
-//        //获取图片的byte[]
-//        Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
-//        byte [] goodsImg  = Bitmap2Bytes(bitmap);
-//        Log.i(TAG,"me_user_register中的bytes--->"+goodsImg);
-
-
-        SaleBO userBO = new SaleBO();
-        String uuid = UUID.randomUUID().toString();
-        userBO.setUid(uuid);
-        userBO.setOpType(opType);
-        userBO.setGoodsID(goodsID);
-        userBO.setGoodsType(goodsType);
-        userBO.setGoodsName(goodsName);
-        userBO.setPrice(price);
-        userBO.setUnit(unit);
-        userBO.setQuality(quality);
-        userBO.setUserid(userid);
-        userBO.setGoodsImg(goodsImg);
-        userBO.setUname(uname);
-        userBO.setUphone(uphone);
-        userBO.setSex(sex);
-        userBO.setQq(qq);
-        userBO.setToken(token);
-
+/**
+ * 发送OkHttp请求
+ * */
+    private void sale(SaleBO saleBO) {
 
         Gson gson = new Gson();
-        String userJsonStr = gson.toJson(userBO, SaleBO.class);
-        Log.i(TAG, "jsonStr is :" + userJsonStr);
+        String goodsJsonStr = gson.toJson(saleBO, SaleBO.class);
+        Log.i(TAG, "find_sale_activity中goodsJsonStr is :" + goodsJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/sale";
-        HttpUtils.sendOkHttpRequest(url,userJsonStr, new okhttp3.Callback() {
+
+        HttpUtils.sendOkHttpRequest(url,goodsJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
@@ -340,13 +292,13 @@ public class find_sale_activity extends AppCompatActivity {
                     Log.d(TAG, "获取数据成功了");
                     Log.d(TAG, "response.code()==" + response.code());
 
-                    final String s = response.body().string();
-                    Log.d(TAG, "response.body().string()==" + s);
+                    final String resultJsr = response.body().string();
+                    Log.d(TAG, "find_sale_activity中response.body().string()==" + resultJsr);
 
                     //将response.code()转换成对象
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
-                    userVO = gson.fromJson(s, UserVO.class);
+                    userVO = gson.fromJson(resultJsr, UserVO.class);
                     int flag = userVO.getFlag();
 
 
@@ -357,8 +309,9 @@ public class find_sale_activity extends AppCompatActivity {
                                     Toast.makeText(find_sale_activity.this, "商品发布成功！", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            Intent intent = new Intent(find_sale_activity.this, me_user_login.class);
-                            startActivity(intent);
+
+
+                            finish();
                         }
                         if (flag == 40001) {
                             runOnUiThread(new Runnable() {
@@ -376,16 +329,15 @@ public class find_sale_activity extends AppCompatActivity {
                                 }
                             });
                         }
-
-
-
-
                 }
             }
         });
 
-
     }
+
+    /**
+     *  图片裁剪
+     * */
     private void startImageCrop(File saveToFile,Uri uri) {
         if(uri == null){
             return ;
@@ -402,7 +354,7 @@ public class find_sale_activity extends AppCompatActivity {
         intent.putExtra( "outputX", 150 );//裁剪区的X方向宽
         intent.putExtra( "outputY", 150 );//裁剪区的Y方向宽
         intent.putExtra( "scale", true );//是否保留比例
-        intent.putExtra( "outputFormat", Bitmap.CompressFormat.PNG.toString() );
+        intent.putExtra( "outputFormat", Bitmap.CompressFormat.JPEG.toString() );
         intent.putExtra( "return-data", false );//是否将数据保留在Bitmap中返回dataParcelable相应的Bitmap数据，防止造成OOM
         //判断文件是否存在
         //File saveToFile = ImageUtils.getTempFile();
@@ -415,11 +367,30 @@ public class find_sale_activity extends AppCompatActivity {
         startActivityForResult( intent, CROP_IMAGE );
     }
 
-    // bitmp转bytes
-    public byte[] Bitmap2Bytes(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
+
+    //初始化
+    public void init(){
+        //初始化
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
+        et_goodsName = (EditText) findViewById(R.id.et_goodsName);
+        et_price = (EditText) findViewById(R.id.et_price);
+        et_qq = (EditText) findViewById(R.id.et_qq);
+        et_unit = (EditText) findViewById(R.id.et_unit);
+        et_quality = (EditText) findViewById(R.id.et_quality);
+        getGoodsType = (Spinner) findViewById(R.id.goods_Type);
+    }
+
+
+    //防止Window Leaked窗体泄漏
+    //所以在关闭(finish)某个Activity前，要确保附属在上面的Dialog或PopupWindow已经关闭(dismiss)了。
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
 

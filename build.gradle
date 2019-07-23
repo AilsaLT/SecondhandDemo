@@ -15,12 +15,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-//        maven {
-//
-//            //这个url访问需要翻墙
-//            url "https://maven.google.com"
-//
-//        }
+    // 添加如下 maven 仓库地址（供腾讯云上传图片对象使用）
+        maven {
+            url "https://dl.bintray.com/tencentqcloudterminal/maven"
+        }
     }
 }
 

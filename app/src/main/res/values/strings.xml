@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Secondhand</string>
+    <string name="app_name">二手市场</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Sort</string>
     <string name="title_notifications">Find</string>

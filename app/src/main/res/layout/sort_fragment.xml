@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#fff">
 
     <RelativeLayout
         android:id="@+id/rl_title"
@@ -48,7 +49,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape"
                     android:clickable="true">
                     <View
                         android:id="@+id/v10"
@@ -74,6 +75,7 @@
                         android:textColor="#000"
                         android:textSize="18sp"/>
                 </RelativeLayout>
+
                 <View
                     android:id="@+id/v1"
                     android:layout_width="3dp"
@@ -81,15 +83,12 @@
                     android:layout_toRightOf="@+id/rl_mobile"
                     android:background="#fff"/>
 
-
-
-
                 <RelativeLayout
                     android:id="@+id/rl_clothes"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape1"
                     android:clickable="true">
 
                     <View
@@ -138,11 +137,11 @@
                     android:background="#fff"/>
 
                 <RelativeLayout
-                    android:id="@+id/rl_richang"
+                    android:id="@+id/rl_books"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape2"
                     android:clickable="true">
 
                     <View
@@ -152,19 +151,20 @@
                         android:background="#fff"/>
 
                     <ImageView
-                        android:id="@+id/img_richang"
+                        android:id="@+id/img_books"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/sort_richang"/>
+                        android:background="@drawable/sort_books"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/img_richang"
+                        android:layout_below="@+id/img_books"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="日常用品"
+                        android:text="书籍"
                         android:textColor="#000"
                         android:textSize="18sp"
                         android:textStyle="italic"/>
@@ -182,7 +182,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape4"
                     android:clickable="true">
 
                     <View
@@ -236,7 +236,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape"
                     android:clickable="true">
                     <View
                         android:id="@+id/v14"
@@ -278,11 +278,11 @@
 
 
                 <RelativeLayout
-                    android:id="@+id/rl_books"
+                    android:id="@+id/rl_others"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#f3e3e4e4"
+                    android:background="@drawable/goods_layout_shape5"
                     android:clickable="true">
                     <View
                         android:id="@+id/v15"
@@ -297,20 +297,20 @@
                         android:layout_alignParentBottom="true"/>
 
                     <ImageView
-                        android:id="@+id/img_books"
+                        android:id="@+id/img_others"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/sort_books"
+                        android:background="@drawable/sort_others"
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/img_books"
+                        android:layout_below="@+id/img_others"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="书籍"
+                        android:text="其它"
                         android:textStyle="italic"
                         android:textColor="#000"
                         android:textSize="18sp"/>

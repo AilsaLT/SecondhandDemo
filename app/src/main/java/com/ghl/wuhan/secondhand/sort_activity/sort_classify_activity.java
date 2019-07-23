@@ -15,8 +15,9 @@ import android.widget.Toast;
 import com.ghl.wuhan.secondhand.DO.Goods;
 import com.ghl.wuhan.secondhand.DO.ResponseBuy;
 import com.ghl.wuhan.secondhand.R;
-import com.ghl.wuhan.secondhand.adapter.Goods_Adapter;
+import com.ghl.wuhan.secondhand.adapter.GoodsItemAdapter;
 import com.ghl.wuhan.secondhand.util.HttpUtils;
+import com.ghl.wuhan.secondhand.util.NetworkStateUtils;
 import com.google.gson.Gson;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
@@ -31,6 +32,8 @@ import okhttp3.Response;
 
 public class sort_classify_activity extends AppCompatActivity {
     private ImageView iv_back;
+    private ImageView iv_networkbad;//无网络
+    private boolean networkState;//网络状态
     private TextView text_commdity_sort;
     private String Commoditytype;
 
@@ -41,7 +44,7 @@ public class sort_classify_activity extends AppCompatActivity {
     //查询列表中的属性
     RecyclerView recyclerView;
     List<Goods> resultGoodsList = new ArrayList<Goods>();
-
+    List<Goods> allGoodsList = new ArrayList<Goods>();
     private SpringView springView;//下拉刷新，上拉加载的控件
     public int page = 1;//页数
     protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
@@ -60,6 +63,10 @@ public class sort_classify_activity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         springView = (SpringView) findViewById( R.id.springView );
 
+        iv_networkbad = (ImageView) findViewById(R.id.iv_networkbad);
+        //默认状态是不可见
+        iv_networkbad.setVisibility(View.GONE);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( sort_classify_activity.this,LinearLayoutManager.VERTICAL,false );
         recyclerView.setLayoutManager( linearLayoutManager );
 
@@ -74,7 +81,7 @@ public class sort_classify_activity extends AppCompatActivity {
         }
 
         //获取用户的token
-        SharedPreferences preferences = getSharedPreferences("data", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
         final String token = preferences.getString("token", "");
         Log.i(TAG, "从sp获取到的token==" + token);
 
@@ -141,6 +148,21 @@ public class sort_classify_activity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
+                networkState = NetworkStateUtils.isNetworkConnected(sort_classify_activity.this);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(networkState == true){
+                            recyclerView.setVisibility(View.GONE);
+                            iv_networkbad.setVisibility(View.VISIBLE);
+                            Toast.makeText(sort_classify_activity.this,"你的服务器在开小差哦",Toast.LENGTH_SHORT).show();
+                        }else{
+                            recyclerView.setVisibility(View.GONE);
+                            iv_networkbad.setVisibility(View.VISIBLE);
+                            Toast.makeText(sort_classify_activity.this,"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -159,18 +181,62 @@ public class sort_classify_activity extends AppCompatActivity {
                     //Log.i(TAG,"查询商品的列表："+ responseBuy.getGoodList().get(0));
                     final int flag = responseBuy.getFlag();
                     Log.i(TAG, "flag==" + flag);
+
                     resultGoodsList = responseBuy.getGoodsList();
-                    Log.i(TAG, "resultGoodsList==" + resultGoodsList);
+                    Log.i(TAG, "sort_classify_activity中resultGoodsList==" + resultGoodsList);
+
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            iv_networkbad.setVisibility(View.GONE);
                             if (flag == 200) {
                                 Log.i( TAG, "run: success" );
-                                Goods_Adapter adapter = new Goods_Adapter(resultGoodsList);
-                                recyclerView.setAdapter(adapter);
-                                Toast.makeText( sort_classify_activity.this,"查询成功！",Toast.LENGTH_SHORT ).show();
+                                if(resultGoodsList == null){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(sort_classify_activity.this, "您的登录信息已过期，请重新登录！", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    return;
+                                }
 
+                                if (resultGoodsList.size() == 0) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(sort_classify_activity.this, "已经到达底线了哦！！", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    //将上一次的resultGoodsList加进来显示
+                                    for (int i = 0; i < resultGoodsList.size(); i++) {
+                                        boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
+                                        for(int j = 0 ;j<allGoodsList.size();j++){
+                                            if(allGoodsList.get(j).getGoodsID().equals(resultGoodsList.get(i).getGoodsID())){
+                                                repeat = true;
+                                            }
+
+                                        }
+                                        if (repeat == false){
+                                            allGoodsList.add(resultGoodsList.get(i));
+                                            Log.i(TAG, "home_fragment中allGoodsList.size() " + allGoodsList.size());
+                                        }
+                                    }
+                                }
+
+                                if(allGoodsList.size() == 0){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(sort_classify_activity.this,"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                GoodsItemAdapter adapter = new GoodsItemAdapter(sort_classify_activity.this,allGoodsList);
+                                recyclerView.setAdapter(adapter);
                             } else if(flag == 30001){
                                 runOnUiThread( new Runnable() {
                                     @Override

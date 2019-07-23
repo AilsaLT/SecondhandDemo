@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="110dp"
-              android:background="#eae7e7">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_goods_item"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:clickable="true"
+    android:background="#fff">
+    <!--<ImageView-->
+        <!--android:id="@+id/img_goodsImg"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:background="#fff"/>-->
 
-    <ImageView
-        android:id="@+id/img_goodsImg"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_goodsImg"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="#fff"/>
+        android:layout_margin="10dp"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="18dp">
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="10dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="#000">-->
+        <ImageView
+            android:id="@+id/img_goodsImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/avatar_loading"/>
+    </android.support.v7.widget.CardView>
 
-    <!--</RelativeLayout>-->
+
 
     <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:background="#fff"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/img_goodsImg"
-        android:layout_toEndOf="@+id/img_goodsImg">
+        android:layout_toEndOf="@+id/cv_goodsImg"
+        android:layout_toRightOf="@+id/cv_goodsImg"
+        android:background="#fff"
+        android:orientation="vertical">
 
         <View
             android:id="@+id/v1"
@@ -36,101 +50,140 @@
             android:id="@+id/tv_goodsId"
             android:layout_width="match_parent"
             android:layout_height="20dp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_toRightOf="@+id/tv_goodsId1"
             android:text="goodsid"
-            android:textSize="15sp"
-            android:layout_toRightOf="@+id/tv_goodsId1"/>
-            <TextView
-                android:id="@+id/tv_goodsId1"
-                android:layout_width="100dp"
-                android:layout_height="20dp"
-                android:text="商品编号："
-                android:textSize="15sp"
-                android:layout_toRightOf="@+id/v1"/>
+            android:textSize="15sp"/>
 
+        <TextView
+            android:id="@+id/tv_goodsId1"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/v1"
+            android:text="商品编号："
+
+            android:textSize="15sp"/>
 
 
         <TextView
             android:id="@+id/tv_goodsName"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:text="goodsname"
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsId"
-            android:layout_toRightOf="@+id/tv_goodsName1"/>
-            <TextView
+            android:layout_toRightOf="@+id/tv_goodsName1"
+            android:text="goodsname"
+            android:singleLine="false"
+            android:textSize="15sp"/>
+
+        <TextView
             android:id="@+id/tv_goodsName1"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="商品名称："
-            android:textSize="15sp"
-            android:layout_toRightOf="@+id/v1"
             android:layout_alignBaseline="@+id/tv_goodsName"
-            android:layout_alignBottom="@+id/tv_goodsName"/>
-
-
-        <TextView
-            android:id="@+id/tv_goodsPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:text="price"
-            android:textSize="15sp"
-            android:layout_below="@+id/tv_goodsName"
-            android:layout_toRightOf="@+id/tv_goodsPrice1"/>
-        <TextView
-            android:id="@+id/tv_goodsPrice1"
-            android:layout_width="100dp"
-            android:layout_height="20dp"
-            android:text="商品单价："
-            android:textSize="15sp"
+            android:layout_alignBottom="@+id/tv_goodsName"
             android:layout_toRightOf="@+id/v1"
-            android:layout_alignBaseline="@+id/tv_goodsPrice"
-            android:layout_alignBottom="@+id/tv_goodsPrice"/>
-
+            android:text="商品名称："
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tv_yuan"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="元"
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsName"
-            android:layout_toRightOf="@+id/tv_goodsPrice"/>
+            android:text="￥"
+            android:gravity="bottom"
+            android:layout_toRightOf="@+id/tv_goodsPrice1"
+            android:textColor="#fbf9cc04"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/tv_goodsPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@+id/tv_goodsName"
+            android:layout_toRightOf="@+id/tv_goodsPrice1"
+            android:layout_marginLeft="15dp"
+            android:text="price"
+            android:textColor="#fbf9cc04"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:id="@+id/tv_goodsPrice1"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignBaseline="@+id/tv_goodsPrice"
+            android:layout_alignBottom="@+id/tv_goodsPrice"
+            android:layout_toRightOf="@+id/v1"
+            android:text="商品单价："
+            android:textSize="15sp"/>
+
+
+
 
         <TextView
             android:id="@+id/tv_goodsUnit"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="unit"
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsPrice"
-            android:layout_toRightOf="@+id/tv_goodsUnit1"/>
+            android:layout_toRightOf="@+id/tv_goodsUnit1"
+            android:text="unit"
+            android:textSize="15sp"/>
+
         <TextView
             android:id="@+id/tv_goodsUnit1"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="商品单位："
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsPrice1"
-            android:layout_toRightOf="@+id/v1"/>
+            android:layout_toRightOf="@+id/v1"
+            android:text="商品单位："
+            android:textSize="15sp"/>
 
 
         <TextView
             android:id="@+id/tv_goodsQuantity"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="quanlity"
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsUnit"
-            android:layout_toRightOf="@+id/tv_goodsQuantity1"/>
+            android:layout_toRightOf="@+id/tv_goodsQuantity1"
+            android:text="quanlity"
+            android:textSize="15sp"/>
+
         <TextView
             android:id="@+id/tv_goodsQuantity1"
             android:layout_width="100dp"
             android:layout_height="20dp"
-            android:text="商品数量："
-            android:textSize="15sp"
             android:layout_below="@+id/tv_goodsUnit1"
-            android:layout_toRightOf="@+id/v1"/>
+            android:layout_toRightOf="@+id/v1"
+            android:text="商品数量："
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_goodsQq"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@+id/tv_goodsQuantity"
+            android:layout_toRightOf="@+id/tv_goodsQq1"
+            android:text="qq"
+            android:textColor="#000"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_goodsQq1"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@+id/tv_goodsQuantity1"
+            android:layout_toRightOf="@+id/v1"
+            android:text="联系方式(QQ)："
+            android:textSize="15sp"/>
+
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#e9e7e7"/>
+
 
 </RelativeLayout>
