@@ -220,7 +220,7 @@ public class me_buyActivity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(me_buyActivity.this,"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(me_buyActivity.this,"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }

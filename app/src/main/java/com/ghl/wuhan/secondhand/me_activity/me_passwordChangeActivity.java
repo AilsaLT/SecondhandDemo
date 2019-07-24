@@ -74,6 +74,7 @@ public class me_passwordChangeActivity extends AppCompatActivity implements View
 
         //获取EdiText上的值
        String password = et_password.getText().toString().trim();
+
         //获取用户的userid
         SharedPreferences preferences = getSharedPreferences("userinfo",MODE_PRIVATE);
         String userid = preferences.getString("userid","");

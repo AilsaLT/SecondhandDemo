@@ -86,7 +86,7 @@
             android:inputType="textPassword"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="30dp"
-            android:hint="密码为6-16位数字字母混合,首位不能为数字"
+            android:hint="密码首位不能为数字"
             android:textSize="15dp"/>
 
 

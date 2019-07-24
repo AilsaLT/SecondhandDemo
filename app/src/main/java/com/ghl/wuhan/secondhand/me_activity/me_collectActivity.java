@@ -216,7 +216,7 @@ public class me_collectActivity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(me_collectActivity.this,"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(me_collectActivity.this,"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }

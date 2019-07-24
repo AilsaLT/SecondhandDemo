@@ -231,7 +231,7 @@ public class sort_classify_activity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(sort_classify_activity.this,"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(sort_classify_activity.this,"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }

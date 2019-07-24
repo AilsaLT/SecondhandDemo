@@ -41,22 +41,19 @@
             android:background="#0895e7"/>
 
     </RelativeLayout>
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3">
         <ImageView
             android:id="@+id/image_touxiang"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerInParent="true"
             android:clickable="true"
-            android:background="@drawable/avatar_touxiang"/>
+            android:background="@drawable/image_photo"/>
 
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -74,6 +71,7 @@
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et_goodsName"
+            android:theme="@style/MyEditText"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -81,7 +79,6 @@
             android:layout_marginRight="10dp"/>
 
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -99,6 +96,8 @@
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et_price"
+            android:inputType="numberDecimal"
+            android:theme="@style/MyEditText"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -107,7 +106,6 @@
 
 
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -126,6 +124,7 @@
 
         <EditText
             android:id="@+id/et_unit"
+            android:theme="@style/MyEditText"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -134,7 +133,6 @@
 
 
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -152,6 +150,8 @@
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et_quality"
+            android:inputType="number"
+            android:theme="@style/MyEditText"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -159,7 +159,31 @@
             android:layout_marginRight="10dp"/>
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="联系方式（qq）："
+            android:textSize="18sp"
+            android:textColor="#847b7b"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+        <EditText
+            android:id="@+id/et_qq"
+            android:theme="@style/MyEditText"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
 
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -184,31 +208,6 @@
             android:spinnerMode="dropdown"
             android:entries="@array/fenlei"/>
 
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <TextView
-            android:id="@+id/text5"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="联系方式（qq）："
-            android:textSize="18sp"
-            android:textColor="#847b7b"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
-        <EditText
-            android:id="@+id/et_qq"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"/>
 
     </RelativeLayout>
 

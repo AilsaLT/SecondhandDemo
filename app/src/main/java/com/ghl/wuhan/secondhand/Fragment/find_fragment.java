@@ -294,7 +294,7 @@ public class find_fragment extends Fragment {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getActivity(),"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(),"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -343,7 +343,7 @@ public class find_fragment extends Fragment {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getActivity(),"暂时没有数据哦！",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(),"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }

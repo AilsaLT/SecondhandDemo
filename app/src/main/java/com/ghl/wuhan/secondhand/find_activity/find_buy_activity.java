@@ -34,9 +34,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static java.lang.Float.parseFloat;
 
 public class find_buy_activity extends AppCompatActivity {
     //属性定义
@@ -61,7 +65,7 @@ public class find_buy_activity extends AppCompatActivity {
     private float price = 0.1f;// 价格
     private String qq;//联系方式
     private String unit; //单位
-    private float quality = 1.0f;//数量
+    private float quality = 1f;//数量
     private String userid;//发布人ID
     private String token;
     private String uname;
@@ -201,33 +205,48 @@ public class find_buy_activity extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //设置进度条
-                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this, "正在发布......");
-                progressDialog.show();
-                //点击物理返回键是否可取消dialog
-                progressDialog.setCancelable(true);
-                //点击dialog之外 是否可取消
-                progressDialog.setCanceledOnTouchOutside(false);
 
-                //获取用户名和密码参数
-                price = Float.parseFloat(et_price.getText().toString());
-                Log.i(TAG, "成功获取price==" + price);
-                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
-                Log.i(TAG, "成功获取goodsName==" + goodsName);
                 SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
                 token = pref.getString("token", "");    //将存储在sp中的token拿到
                 uname = pref.getString("uname", "");
                 userid = pref.getString("userid", "");
+                String uuid = UUID.randomUUID().toString();
                 Log.i(TAG, "find_buy_activity中的userid--->" + userid);
                 Log.i(TAG, "成功获取token==" + token);
                 Log.i(TAG, "成功获取uname==" + uname);
-                //获取EditText上的商品单位和数量
+
+                //获取EditText上的值
+                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
+                Log.i(TAG, "成功获取goodsName==" + goodsName);
                 unit = et_unit.getText().toString().trim();
-                quality = Float.parseFloat(String.valueOf(et_quality.getText()));
                 qq = et_qq.getText().toString().trim();
-                String uuid = UUID.randomUUID().toString();
                 pictureUrl = COSPictureUtils.getPitureUrl();
                 Log.i(TAG, "find_buy_activity中pictureUrl--->" + pictureUrl);
+                String st_price = et_price.getText().toString();
+                String st_quality = et_quality.getText().toString();
+
+                //判断输入框是否为空
+                if(goodsName == null || goodsName.equals("") || st_price == null || st_price.equals("")  || unit == null || unit.equals("") || st_quality == null || st_quality.equals("") || qq == null || qq.equals("") || pictureUrl == null || pictureUrl.equals("")){
+                    Toast.makeText(find_buy_activity.this,"请输入完整的信息哦！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //数据类型转换
+                price = Float.parseFloat(st_price);
+                quality = parseFloat(st_quality);
+
+                //判断输入格式是否正确
+                //{4,14}表示长度为4到14。//[1-9][0-9]{5,9}匹配6到10位QQ号码,[1-9]表示第一位不能为0
+                String regex="[1-9][0-9]{4,14}";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(qq);
+                boolean isMatch = m.matches();
+                if(isMatch == false){
+                    Toast.makeText(find_buy_activity.this,"您的QQ格式不对哦！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
 
                 BuyBO buyBO = new BuyBO();
                 buyBO.setPrice(price);
@@ -243,6 +262,14 @@ public class find_buy_activity extends AppCompatActivity {
                 buyBO.setGoodsID(goodsID);
                 buyBO.setGoodsType(goodsType);
                 buyBO.setPictureUrl(pictureUrl);
+
+                //设置进度条
+                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this, "正在发布......");
+                progressDialog.show();
+                //点击物理返回键是否可取消dialog
+                progressDialog.setCancelable(true);
+                //点击dialog之外 是否可取消
+                progressDialog.setCanceledOnTouchOutside(false);
                 //发送OkHttp请求
                 buyGoods(buyBO);
 

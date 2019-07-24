@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
+              android:background="#fff"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               tools:context="com.ghl.wuhan.secondhand.home_activity.home_search">
@@ -77,7 +78,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="510dp">
+        android:layout_height="510dp"
+        android:layout_marginTop="10dp">
         <ImageView
             android:id="@+id/iv_networkbad"
             android:layout_width="100dp"
