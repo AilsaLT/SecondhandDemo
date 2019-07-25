@@ -114,39 +114,39 @@ public class personal_Activity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.iv_back:
-                //finish();
-                Intent intent =new Intent(personal_Activity.this,personal_changeActivity.class);
-                startActivity(intent);
+                finish();
+//                Intent intent =new Intent(personal_Activity.this,personal_changeActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.iv_avatar:
                 Intent intent_avatar = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_avatar);
-//                finish();
+                finish();
                 break;
             case R.id.iv_nickname:
                 Intent intent_nick = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_nick);
-//                finish();
+                finish();
                 break;
             case R.id.iv_qq:
                 Intent intent_password = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_password);
-//                finish();
+                finish();
                 break;
             case R.id.iv_wichat:
                 Intent intent_wichat = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_wichat);
-//                finish();
+                finish();
                 break;
             case R.id.iv_phone:
                 Intent intent_phone = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_phone);
-//                finish();
+                finish();
                 break;
             case R.id.iv_sex:
                 Intent intent_sex = new Intent(personal_Activity.this,personal_changeActivity.class);
                 startActivity(intent_sex);
-//                finish();
+                finish();
                 break;
             default:
                 break;

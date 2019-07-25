@@ -40,6 +40,8 @@ public class home_search extends AppCompatActivity {
     private ImageView iv_networkbad;//无网络
     private boolean networkState;//网络状态
 
+    private ImageView iv_no_goods;//无商品时
+
 
 
     @Override
@@ -56,6 +58,10 @@ public class home_search extends AppCompatActivity {
         iv_networkbad = (ImageView) findViewById(R.id.iv_networkbad);//无网络
         //默认状态是不可见
         iv_networkbad.setVisibility(View.GONE);
+
+        iv_no_goods = (ImageView) findViewById(R.id.iv_no_goods);
+        //默认状态为不可见
+        iv_no_goods.setVisibility(View.GONE);
 
 
         //点击搜索
@@ -121,11 +127,13 @@ public class home_search extends AppCompatActivity {
                         if(networkState == true ){
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(View.VISIBLE);
+                            iv_no_goods.setVisibility(View.GONE);
                             Toast.makeText(home_search.this,"你的服务器在开小差哦",Toast.LENGTH_SHORT).show();
 
                         }else{
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(View.VISIBLE);
+                            iv_no_goods.setVisibility(View.GONE);
                             Toast.makeText(home_search.this,"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
 
                         }
@@ -158,6 +166,10 @@ public class home_search extends AppCompatActivity {
                         public void run() {
                             recyclerView.setVisibility(View.VISIBLE);
                             iv_networkbad.setVisibility(View.GONE);
+                            iv_no_goods.setVisibility(View.GONE);
+
+
+
                             if (flag == 200) {
                                 Log.i(TAG, "run: success");
                                 //为RecyclerView的item指定其布局为线性布局
@@ -166,7 +178,10 @@ public class home_search extends AppCompatActivity {
                                 //绑定适配器
                                 GoodsItemAdapter adapter = new GoodsItemAdapter(home_search.this,resultGoodsList);
                                 recyclerView.setAdapter(adapter);
-                                Toast.makeText(home_search.this, "查询成功！", Toast.LENGTH_SHORT).show();
+                                if(resultGoodsList.size() == 0){
+                                    iv_no_goods.setVisibility(View.VISIBLE);
+                                }
+//                                Toast.makeText(home_search.this, "查询成功！", Toast.LENGTH_SHORT).show();
 
                             } else if (flag == 30001) {
                                 runOnUiThread(new Runnable() {

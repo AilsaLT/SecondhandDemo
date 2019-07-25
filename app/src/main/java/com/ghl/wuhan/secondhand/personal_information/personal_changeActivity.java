@@ -317,6 +317,7 @@ public class personal_changeActivity extends AppCompatActivity implements View.O
                                 Toast.makeText(personal_changeActivity.this, "您的信息已修改成功！", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(personal_changeActivity.this, MainActivity.class);
                                 startActivity(intent);
+                                finish();
                             }  else {
                                 runOnUiThread(new Runnable() {
                                     @Override

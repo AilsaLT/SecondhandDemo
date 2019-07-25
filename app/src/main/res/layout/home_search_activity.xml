@@ -81,6 +81,12 @@
         android:layout_height="510dp"
         android:layout_marginTop="10dp">
         <ImageView
+            android:id="@+id/iv_no_goods"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/no_goods"
+            android:layout_centerInParent="true"/>
+        <ImageView
             android:id="@+id/iv_networkbad"
             android:layout_width="100dp"
             android:layout_height="100dp"
