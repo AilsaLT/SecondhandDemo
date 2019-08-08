@@ -78,7 +78,122 @@ public class find_buy_activity extends AppCompatActivity {
 
     private boolean networkState;//判断网络状态
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.find_buy_activity);
 
+        //进来先判断网络状态
+        networkState = NetworkStateUtils.isNetworkConnected(find_buy_activity.this);
+
+        if (networkState == false) {
+            Toast.makeText(find_buy_activity.this, "你的网络在开小差哦！", Toast.LENGTH_SHORT).show();
+        }
+
+        //初始化
+        init();
+        //取消求购
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //spanner
+        getGoodsType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                goodsType = position + 1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        //调用手机摄像头拍照或选择相册
+        image_touxiang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                picsTokenPhoto();
+            }
+        });
+
+        //点击发布商品
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
+                token = pref.getString("token", "");    //将存储在sp中的token拿到
+                uname = pref.getString("uname", "");
+                userid = pref.getString("userid", "");
+                String uuid = UUID.randomUUID().toString();
+                Log.i(TAG, "find_buy_activity中的userid--->" + userid);
+                Log.i(TAG, "成功获取token==" + token);
+                Log.i(TAG, "成功获取uname==" + uname);
+                //判断token是否为空
+                if (token == null) {
+                    Toast.makeText(find_buy_activity.this, "您的登录信息可能已经过期，请重新登录！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //获取EditText上的值
+                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
+                Log.i(TAG, "成功获取goodsName==" + goodsName);
+                unit = et_unit.getText().toString().trim();
+                qq = et_qq.getText().toString().trim();
+                pictureUrl = COSPictureUtils.getPitureUrl();
+                Log.i(TAG, "find_buy_activity中pictureUrl--->" + pictureUrl);
+                String st_price = et_price.getText().toString();
+                String st_quality = et_quality.getText().toString();
+
+                //判断输入框是否为空
+                if (goodsName == null || goodsName.equals("") || st_price == null || st_price.equals("") || unit == null || unit.equals("") || st_quality == null || st_quality.equals("") || qq == null || qq.equals("") || pictureUrl == null || pictureUrl.equals("")) {
+                    Toast.makeText(find_buy_activity.this, "请输入完整的信息哦！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //数据类型转换
+                price = Float.parseFloat(st_price);
+                quality = parseFloat(st_quality);
+                //判断输入格式是否正确
+                //{4,14}表示长度为4到14。//[1-9][0-9]{5,9}匹配6到10位QQ号码,[1-9]表示第一位不能为0
+                String regex = "[1-9][0-9]{4,14}";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(qq);
+                boolean isMatch = m.matches();
+                if (isMatch == false) {
+                    Toast.makeText(find_buy_activity.this, "您的QQ格式不对哦！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                BuyBO buyBO = new BuyBO();
+                buyBO.setPrice(price);
+                buyBO.setGoodsName(goodsName);
+                buyBO.setToken(token);
+                buyBO.setUname(uname);
+                buyBO.setUserid(userid);
+                buyBO.setUnit(unit);
+                buyBO.setQuality(quality);
+                buyBO.setQq(qq);
+                buyBO.setUid(uuid);
+                buyBO.setOpType(opType);
+                buyBO.setGoodsID(goodsID);
+                buyBO.setGoodsType(goodsType);
+                buyBO.setPictureUrl(pictureUrl);
+
+                //设置进度条
+                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this, "正在发布......");
+                progressDialog.show();
+                //点击物理返回键是否可取消dialog
+                progressDialog.setCancelable(true);
+                //点击dialog之外 是否可取消
+                progressDialog.setCanceledOnTouchOutside(false);
+                //发送OkHttp请求
+                buyGoods(buyBO);
+
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -128,151 +243,39 @@ public class find_buy_activity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.find_buy_activity);
-
-        //进来先判断网络状态
-        networkState = NetworkStateUtils.isNetworkConnected(find_buy_activity.this);
-
-        if(networkState == false  ){
-            Toast.makeText(find_buy_activity.this,"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
-        }
-
-        //初始化
-        init();
-        //取消求购
-        iv_back.setOnClickListener(new View.OnClickListener() {
+    //调用手机摄像头拍照或选择相册
+    private void picsTokenPhoto() {
+        //具体实现部分
+        List<String> stringList = new ArrayList<String>();
+        stringList.add("拍照");
+        stringList.add("从相册选择");
+        final OptionBottomDialog optionBottomDialog = new OptionBottomDialog(find_buy_activity.this, stringList);
+        optionBottomDialog.setItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        //spanner
-        getGoodsType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                goodsType = position + 1;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        image_touxiang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //具体实现部分
-                List<String> stringList = new ArrayList<String>();
-                stringList.add("拍照");
-                stringList.add("从相册选择");
-                final OptionBottomDialog optionBottomDialog = new OptionBottomDialog(find_buy_activity.this, stringList);
-                optionBottomDialog.setItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //选择调用手机相机拍照或在相册中选择照片的逻辑实现部分
-                        switch (position) {
-                            case 0:
-                                //选择调用手机相机
-                                Intent photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                imageUri = ImageUtils.getImageUri(find_buy_activity.this);
-                                Log.i(TAG, "find_sale_activity中的imageUri--->" + imageUri);
-                                //putExtra()指定图片的输出地址，填入之前获得的Uri对象
-                                photo.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                startActivityForResult(photo, TAKE_PHOTO);
-                                //底部弹框消失
-                                optionBottomDialog.dismiss();
-
-                                break;
-                            case 1:
-                                //选择相册
-                                Intent picsIn = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(picsIn, CHOOSE_PHOTO);
-                                //底部弹框消失
-                                optionBottomDialog.dismiss();
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-            }
-        });
-
-        //点击发布商品
-        btn_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                SharedPreferences pref = getSharedPreferences("userinfo", MODE_PRIVATE);
-                token = pref.getString("token", "");    //将存储在sp中的token拿到
-                uname = pref.getString("uname", "");
-                userid = pref.getString("userid", "");
-                String uuid = UUID.randomUUID().toString();
-                Log.i(TAG, "find_buy_activity中的userid--->" + userid);
-                Log.i(TAG, "成功获取token==" + token);
-                Log.i(TAG, "成功获取uname==" + uname);
-
-                //获取EditText上的值
-                goodsName = et_goodsName.getText().toString().trim();//trim()的作用是去掉字符串左右的空格
-                Log.i(TAG, "成功获取goodsName==" + goodsName);
-                unit = et_unit.getText().toString().trim();
-                qq = et_qq.getText().toString().trim();
-                pictureUrl = COSPictureUtils.getPitureUrl();
-                Log.i(TAG, "find_buy_activity中pictureUrl--->" + pictureUrl);
-                String st_price = et_price.getText().toString();
-                String st_quality = et_quality.getText().toString();
-
-                //判断输入框是否为空
-                if(goodsName == null || goodsName.equals("") || st_price == null || st_price.equals("")  || unit == null || unit.equals("") || st_quality == null || st_quality.equals("") || qq == null || qq.equals("") || pictureUrl == null || pictureUrl.equals("")){
-                    Toast.makeText(find_buy_activity.this,"请输入完整的信息哦！",Toast.LENGTH_SHORT).show();
-                    return;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //选择调用手机相机拍照或在相册中选择照片的逻辑实现部分
+                switch (position) {
+                    case 0:
+                        //选择调用手机相机
+                        Intent photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        imageUri = ImageUtils.getImageUri(find_buy_activity.this);
+                        Log.i(TAG, "find_sale_activity中的imageUri--->" + imageUri);
+                        //putExtra()指定图片的输出地址，填入之前获得的Uri对象
+                        photo.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        startActivityForResult(photo, TAKE_PHOTO);
+                        //底部弹框消失
+                        optionBottomDialog.dismiss();
+                        break;
+                    case 1:
+                        //选择相册
+                        Intent picsIn = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(picsIn, CHOOSE_PHOTO);
+                        //底部弹框消失
+                        optionBottomDialog.dismiss();
+                        break;
+                    default:
+                        break;
                 }
-
-                //数据类型转换
-                price = Float.parseFloat(st_price);
-                quality = parseFloat(st_quality);
-
-                //判断输入格式是否正确
-                //{4,14}表示长度为4到14。//[1-9][0-9]{5,9}匹配6到10位QQ号码,[1-9]表示第一位不能为0
-                String regex="[1-9][0-9]{4,14}";
-                Pattern p = Pattern.compile(regex);
-                Matcher m = p.matcher(qq);
-                boolean isMatch = m.matches();
-                if(isMatch == false){
-                    Toast.makeText(find_buy_activity.this,"您的QQ格式不对哦！",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-
-                BuyBO buyBO = new BuyBO();
-                buyBO.setPrice(price);
-                buyBO.setGoodsName(goodsName);
-                buyBO.setToken(token);
-                buyBO.setUname(uname);
-                buyBO.setUserid(userid);
-                buyBO.setUnit(unit);
-                buyBO.setQuality(quality);
-                buyBO.setQq(qq);
-                buyBO.setUid(uuid);
-                buyBO.setOpType(opType);
-                buyBO.setGoodsID(goodsID);
-                buyBO.setGoodsType(goodsType);
-                buyBO.setPictureUrl(pictureUrl);
-
-                //设置进度条
-                progressDialog = DialogUIUtils.showLoadingDialog(find_buy_activity.this, "正在发布......");
-                progressDialog.show();
-                //点击物理返回键是否可取消dialog
-                progressDialog.setCancelable(true);
-                //点击dialog之外 是否可取消
-                progressDialog.setCanceledOnTouchOutside(false);
-                //发送OkHttp请求
-                buyGoods(buyBO);
-
             }
         });
     }
@@ -291,59 +294,49 @@ public class find_buy_activity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(find_buy_activity.this, "目前网络不佳！", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();//进度条消失
+                        return;
                     }
                 });
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
                     Log.d(TAG, "获取数据成功了");
                     Log.d(TAG, "response.code()==" + response.code());
-
-                    final String buyGoodsJstr = response.body().string();
+                    final String buyGoodsJstr = response.body().string();//后台获取的数据
                     Log.d(TAG, "find_buy_activity中buyGoodsJstr--->" + buyGoodsJstr);
-
-                    //将response.code()转换成对象
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
-                    userVO = gson.fromJson(buyGoodsJstr, UserVO.class);
-                    int flag = userVO.getFlag();
-
-
-                    if (flag == 200) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    userVO = gson.fromJson(buyGoodsJstr, UserVO.class);//解析
+                    final int flag = userVO.getFlag();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (flag == 200) {
                                 Toast.makeText(find_buy_activity.this, "求购商品信息已发布成功！", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
-                        });
-
-                        finish();
-                    }
-                    if (flag == 40001) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            if (flag == 40001) {
                                 Toast.makeText(find_buy_activity.this, "照片过大，商品发布失败！", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();//进度条消失
+                                return;
                             }
-                        });
-                    }
-                    if (flag == 4000) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(find_buy_activity.this, "SALE_GOODS_FAILED_PARAMS", Toast.LENGTH_SHORT).show();
+                            if (flag == 30001) {
+                                Toast.makeText(find_buy_activity.this, "登录信息已过期，请重新登录", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();//进度条消失
+                                return;
                             }
-                        });
-                    }
-
-
+                            if (flag == 40003) {
+                                Toast.makeText(find_buy_activity.this, "商品数据出错", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();//进度条消失
+                                return;
+                            }
+                        }
+                    });
                 }
             }
         });
-
-
     }
 
     //图片裁剪

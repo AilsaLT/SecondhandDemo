@@ -132,26 +132,46 @@ public class personal_changeActivity extends AppCompatActivity implements View.O
         Log.i(TAG,"me_fragment中login--->"+login);
         if(login == true){
             Glide.with(this).load(pictureUrl).error(R.drawable.avatar_loading_fail).into(icon_image);
+            SharedPreferences preferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+            //QQ号
+            String qq = preferences.getString("qq","");
+            if(qq == null || qq.equals("")){
+                et_qq_show.setText("未填写");
+            }else {
+                et_qq_show.setText(qq);
+            }
+
+            //微信号
+            String wichat = preferences.getString("weixin","");
+            if (wichat == null || wichat.equals("")){
+                et_wichat_show.setText("未填写");
+            }else {
+                et_wichat_show.setText(wichat);
+            }
+
+            //电话
+            String phone = preferences.getString("phone","");
+            if (phone == null || phone.equals("")){
+                et_phone_show.setText("未填写");
+            }else{
+                et_phone_show.setText(phone);
+            }
+
+            //性别
+            int sex = preferences.getInt("sex", 0);
+            if(sex != 0 && sex != 1){
+                et_sex_show.setText("未填写");
+            }else {
+                if(sex == 0){
+                    et_sex_show.setText("女");
+                }else if(sex == 1){
+                    et_sex_show.setText("男");
+                }
+            }
+
         }
 
-        SharedPreferences preferences = getSharedPreferences("userinfo",MODE_PRIVATE);
 
-        //QQ号
-        String qq = preferences.getString("qq","");
-        et_qq_show.setText(qq);
-        //微信号
-        String wichat = preferences.getString("weixin","");
-        et_wichat_show.setText(wichat);
-        //电话
-        String phone = preferences.getString("phone","");
-        et_phone_show.setText(phone);
-        //性别
-        int sex = preferences.getInt("sex", 0);
-        if(sex == 0){
-            et_sex_show.setText("女");
-        }else if(sex == 1){
-            et_sex_show.setText("男");
-        }
 
 
         //1.注：此时setOnClickListener传入的是this

@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- 允许程序读取或写入系统设置(Allowsan application to read or write the system settings. ) -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS"/>-->
 
     <application
         android:name=".MyApplication"

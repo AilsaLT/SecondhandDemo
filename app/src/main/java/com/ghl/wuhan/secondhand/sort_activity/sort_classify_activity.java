@@ -43,78 +43,56 @@ public class sort_classify_activity extends AppCompatActivity {
     private int opType = 90004;//操作类型
     //查询列表中的属性
     RecyclerView recyclerView;
-    List<Goods> resultGoodsList = new ArrayList<Goods>();
+    List<Goods> newResultGoodsList = new ArrayList<Goods>();
     List<Goods> allGoodsList = new ArrayList<Goods>();
     private SpringView springView;//下拉刷新，上拉加载的控件
-    public int page = 1;//页数
+    private int pageRefresh;//刷新页数
+    private int pageMore = 1;//加载更多页数
     protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
     public int pageSize = 5;//数据条数
-
     private int goodsType;//商品所属类
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sort_classify_activity);
-
-        //初始化
-        text_commdity_sort = (TextView) findViewById(R.id.tv_1);
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        springView = (SpringView) findViewById( R.id.springView );
-
-        iv_networkbad = (ImageView) findViewById(R.id.iv_networkbad);
-        //默认状态是不可见
-        iv_networkbad.setVisibility(View.GONE);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( sort_classify_activity.this,LinearLayoutManager.VERTICAL,false );
-        recyclerView.setLayoutManager( linearLayoutManager );
-
+        //初始化视图界面
+        initView();
         Intent intent = getIntent();
         goodsType = Integer.parseInt(intent.getStringExtra("classifyType"));
         Log.i(TAG,"goodsType--->"+goodsType);
         Commoditytype = intent.getStringExtra("Commoditype");
         Log.i(TAG,"Commoditytype--->"+Commoditytype);
-
         if (null != Commoditytype && !Commoditytype.equals("")) {
             text_commdity_sort.setText(Commoditytype);
         }
-
         //获取用户的token
         SharedPreferences preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
-        final String token = preferences.getString("token", "");
+        token = preferences.getString("token", "");
         Log.i(TAG, "从sp获取到的token==" + token);
-
-        //getData();
         getData(token,opType);
-
         springView.setHeader( new DefaultHeader( this ) );
         springView.setFooter( new DefaultFooter( this ) );
         springView.setListener(new SpringView.OnFreshListener() {
             //刷新
             @Override
             public void onRefresh() {
-                page = 1 ;
+                pageRefresh = 1 ;
                 checkType = 2;
-                Log.i( TAG, "onRefresh: page is " + page );
-                //getData();
+                Log.i( TAG, "onRefresh: page is " + pageRefresh );
                 getData(token,opType);
                 springView.onFinishFreshAndLoad();
             }
             //加载更多
             @Override
             public void onLoadmore() {
-                page ++;
+                pageMore ++;
                 checkType = 1;
-                Log.i( TAG, "onRefresh: page is " + page );
-                /*********/
-                //getData();
+                Log.i( TAG, "onRefresh: page is " + pageMore );
                 getData(token,opType);
-                /*********/
                 springView.onFinishFreshAndLoad();
             }
         });
-
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,19 +100,29 @@ public class sort_classify_activity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
+    }
+    //初始化视图界面
+    private void initView() {
+        text_commdity_sort = (TextView) findViewById(R.id.tv_1);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        springView = (SpringView) findViewById( R.id.springView );
+        iv_networkbad = (ImageView) findViewById(R.id.iv_networkbad);
+        iv_networkbad.setVisibility(View.GONE); //默认状态是不可见
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( sort_classify_activity.this,LinearLayoutManager.VERTICAL,false );
+        recyclerView.setLayoutManager( linearLayoutManager );
     }
 
     private void getData(String token, int opType) {
         Goods goods = new Goods();
         goods.setToken(token);
         goods.setOpType(opType);
-
         goods.setCheckType(checkType);
-        goods.setPage(page);
+        if (checkType == 1){//加载更多
+            goods.setPage(pageMore);
+        }else {
+            goods.setPage(pageRefresh);
+        }
         goods.setPageSize(pageSize);
         goods.setGoodsType(String.valueOf(goodsType));
 
@@ -169,10 +157,8 @@ public class sort_classify_activity extends AppCompatActivity {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
                     Log.d(TAG, "获取数据成功了");
                     Log.d(TAG, "response.code()==" + response.code());
-
                     final String jsonData = response.body().string();
                     Log.d(TAG, "查询商品中的response.body().string()==" + jsonData);
-
                     Gson gson = new Gson();
                     Log.i(TAG, "开始解析jsonData");
                     ResponseBuy responseBuy = gson.fromJson(jsonData, ResponseBuy.class);
@@ -181,86 +167,72 @@ public class sort_classify_activity extends AppCompatActivity {
                     //Log.i(TAG,"查询商品的列表："+ responseBuy.getGoodList().get(0));
                     final int flag = responseBuy.getFlag();
                     Log.i(TAG, "flag==" + flag);
-
-                    resultGoodsList = responseBuy.getGoodsList();
-                    Log.i(TAG, "sort_classify_activity中resultGoodsList==" + resultGoodsList);
-
-
+                    newResultGoodsList = responseBuy.getGoodsList();
+                    Log.i(TAG, "sort_classify_activity中resultGoodsList==" + newResultGoodsList);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             recyclerView.setVisibility(View.VISIBLE);
                             iv_networkbad.setVisibility(View.GONE);
                             if (flag == 200) {
-                                Log.i( TAG, "run: success" );
-                                if(resultGoodsList == null){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(sort_classify_activity.this, "您的登录信息已过期，请重新登录！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                Log.i(TAG, "run: success");
+                                //如果一直上拉刷新，当newResultGoodsList返回为null，说明数据库里已经没有更多数据了
+                                if (newResultGoodsList.size() <=0) {
+                                    Toast.makeText(sort_classify_activity.this, "没有更多内容了哦！", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-
-                                if (resultGoodsList.size() == 0) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(sort_classify_activity.this, "已经到达底线了哦！！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                } else {
-                                    //将上一次的resultGoodsList加进来显示
-                                    for (int i = 0; i < resultGoodsList.size(); i++) {
+                                //上拉加载
+                                if (checkType == 1) {
+                                    //将newResultGoodsList加到allGoodsList的下面显示，使其按顺序排序
+                                    for (int i = 0; i < newResultGoodsList.size(); i++) {
                                         boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
-                                        for(int j = 0 ;j<allGoodsList.size();j++){
-                                            if(allGoodsList.get(j).getGoodsID().equals(resultGoodsList.get(i).getGoodsID())){
+                                        for (int j = 0; j < allGoodsList.size(); j++) {
+                                            if (allGoodsList.get(j).getGoodsID().equals(newResultGoodsList.get(i).getGoodsID())) {
                                                 repeat = true;
+                                                break;
                                             }
-
                                         }
-                                        if (repeat == false){
-                                            allGoodsList.add(resultGoodsList.get(i));
-                                            Log.i(TAG, "home_fragment中allGoodsList.size() " + allGoodsList.size());
+                                        if (repeat == false) {
+                                            allGoodsList.add(newResultGoodsList.get(i));
+                                            Log.i(TAG, "sort_classify_activity中allGoodsList.size() " + allGoodsList.size());
                                         }
                                     }
+                                    GoodsItemAdapter adapter = new GoodsItemAdapter(sort_classify_activity.this, allGoodsList);
+                                    recyclerView.setAdapter(adapter);
+                                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);//自动滑动到底部
                                 }
-
-                                if(allGoodsList.size() == 0){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(sort_classify_activity.this,"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
+                                //下拉刷新
+                                if (checkType == 2) {
+                                    //将allGoodsList的内容加到newResultGoodsList下面显示，使得最新的展示在第一页
+                                    for (int i = 0; i < allGoodsList.size(); i++) {
+                                        boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
+                                        for (int j = 0; j < newResultGoodsList.size(); j++) {
+                                            if (newResultGoodsList.get(j).getGoodsID().equals(allGoodsList.get(i).getGoodsID())) {
+                                                repeat = true;
+                                                break;
+                                            }
                                         }
-                                    });
+                                        if (repeat == false) {
+                                            newResultGoodsList.add(allGoodsList.get(i));
+                                            Log.i(TAG, "sort_classify_activity中allGoodsList.size() " + allGoodsList.size());
+                                        }
+                                    }
+                                    allGoodsList = newResultGoodsList;
+                                    GoodsItemAdapter adapter = new GoodsItemAdapter(sort_classify_activity.this, allGoodsList);
+                                    recyclerView.setAdapter(adapter);
+                                    //recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                                 }
-                                GoodsItemAdapter adapter = new GoodsItemAdapter(sort_classify_activity.this,allGoodsList);
-                                recyclerView.setAdapter(adapter);
                             } else if(flag == 30001){
-                                runOnUiThread( new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText( sort_classify_activity.this,"登录信息已失效,请再次登录",Toast.LENGTH_SHORT ).show();
-                                    }
-                                } );
+                                Toast.makeText( sort_classify_activity.this,"登录信息已失效,请再次登录",Toast.LENGTH_SHORT ).show();
                             }
                             else{
-                                runOnUiThread( new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText( sort_classify_activity.this,"查询失败！",Toast.LENGTH_SHORT ).show();
-                                    }
-                                } );
+                               Toast.makeText( sort_classify_activity.this,"查询失败！",Toast.LENGTH_SHORT ).show();
                             }
                         }
                     });
                 }
             }
         });
-
-
     }
-
 }
 

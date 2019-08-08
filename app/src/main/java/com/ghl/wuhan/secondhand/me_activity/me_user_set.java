@@ -27,7 +27,6 @@ public class me_user_set extends AppCompatActivity  {
         setContentView(R.layout.me_user_set);
         // 方法：初始化View
         initView();
-
         pref = getSharedPreferences("userinfo",MODE_PRIVATE);
         boolean login = pref.getBoolean("login",false);
         if(login == true){
@@ -40,7 +39,6 @@ public class me_user_set extends AppCompatActivity  {
                     alert.setMessage("真的要退出本软件吗？");
                     //添加取消按钮
                     alert.setButton(DialogInterface.BUTTON_NEGATIVE,"不",new DialogInterface.OnClickListener() {
-
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO Auto-generated method stub
@@ -52,11 +50,10 @@ public class me_user_set extends AppCompatActivity  {
 
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
-                            //                        finish();
-
                             //确定退出后并将登录标志为false
                             editor = getSharedPreferences("userinfo", MODE_PRIVATE).edit();
                             editor.putBoolean("login",false);
+                            editor.putString("token","");//但用户退出登录后将会把token清空，此时有关该用户的操作将不能进行，需重新登录才能继续进行
                             editor.commit();
                             Intent intent = new Intent(me_user_set.this, MainActivity.class);
                             intent.putExtra("EXIT_TAG", "SINGLETASK");

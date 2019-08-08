@@ -120,12 +120,7 @@ public class me_passwordChangeActivity extends AppCompatActivity implements View
                                 Log.i("TAG", "run: success");
                                 Toast.makeText(me_passwordChangeActivity.this, "您的密码已修改成功！", Toast.LENGTH_SHORT).show();
                             }  else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(me_passwordChangeActivity.this, "密码修改失败！", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(me_passwordChangeActivity.this, "密码修改失败！", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -21,6 +21,7 @@ import com.ghl.wuhan.secondhand.me_activity.me_buyActivity;
 import com.ghl.wuhan.secondhand.me_activity.me_collectActivity;
 import com.ghl.wuhan.secondhand.me_activity.me_user_login;
 import com.ghl.wuhan.secondhand.me_activity.me_user_set;
+import com.ghl.wuhan.secondhand.personal_information.personal_changeActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.text.TextUtils.isEmpty;
@@ -151,6 +152,25 @@ public class me_fragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //点击用户名跳转到个人信息修改
+        tv_deng1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),personal_changeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //点击头像跳转到个人信息修改
+        iv_deng1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),personal_changeActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
     }

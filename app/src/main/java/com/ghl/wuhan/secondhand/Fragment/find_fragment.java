@@ -41,22 +41,21 @@ import static android.view.View.VISIBLE;
 
 
 public class find_fragment extends Fragment {
-    private TextView tv_tan,tv_qiu;
+    private TextView tv_tan, tv_qiu;
     private ImageView image_ti;
     private String TAG = "TAG";
     private SharedPreferences preferences;
     private int opType = 90004;//操作类型
-
     //查询列表中的属性
     RecyclerView recyclerView;
-    List<Goods> resultGoodsList = new ArrayList<Goods>();
-    List<Goods> allGoodsList = new ArrayList<Goods>();
+    List<Goods> newResultGoodsList = new ArrayList<Goods>();
     List<Goods> saleGoodsList = new ArrayList<Goods>();
     List<Goods> sale_allGoodsList = new ArrayList<Goods>();
     List<Goods> buyGoodsList = new ArrayList<Goods>();
     List<Goods> buy_allGoodsList = new ArrayList<Goods>();
     private SpringView springView;//下拉刷新，上拉加载的控件
-    public int page = 1;//页数
+    private int pageRefresh;//刷新页数
+    private int pageMore = 1;//加载更多页数
     protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
     public int pageSize = 5;//数据条数
     public int flagType = 1;//1--摊位，2--求购,3--收藏列表(me_collectActivity)
@@ -64,41 +63,32 @@ public class find_fragment extends Fragment {
     private ImageView iv_networkbad;//无网络
     private boolean networkState;//网络状态
 
-
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.find_fragment,container,false);
-
+        View view = inflater.inflate(R.layout.find_fragment, container, false);
         //初始化部分
-        tv_tan=(TextView)view.findViewById(R.id.tv_tan);
-        tv_qiu=(TextView) view.findViewById(R.id.tv_qiu);
-        image_ti=(ImageView)view.findViewById(R.id.image_ti);
+        tv_tan = (TextView) view.findViewById(R.id.tv_tan);
+        tv_qiu = (TextView) view.findViewById(R.id.tv_qiu);
+        image_ti = (ImageView) view.findViewById(R.id.image_ti);
         iv_networkbad = (ImageView) view.findViewById(R.id.iv_networkbad);//无网络
-        //默认状态是不可见
-        iv_networkbad.setVisibility(View.GONE);
-
+        iv_networkbad.setVisibility(View.GONE); //默认状态是不可见
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         springView = (SpringView) view.findViewById(R.id.springView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-
-        //设置默认状态白底蓝字
-        tv_tan.setEnabled(false);
+        tv_tan.setEnabled(false); //设置默认状态白底蓝字
         tv_tan.setTextColor(Color.parseColor("#0895e7"));
 
 
-        getData( opType);
+        getData(opType);
         //摊位
         tv_tan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flagType = 1;//表示方式为摊位
-                Log.i(TAG,"摊位flagType--->"+flagType);
-                getData( opType);
+                Log.i(TAG, "摊位flagType--->" + flagType);
+                getData(opType);
                 formType = 1;//表示出售商品
                 tv_tan.setEnabled(false);
                 tv_tan.setTextColor(Color.parseColor("#0895e7"));
@@ -112,8 +102,8 @@ public class find_fragment extends Fragment {
             public void onClick(View v) {
 
                 flagType = 2;//表示方式为求购
-                Log.i(TAG,"求购flagType--->"+flagType);
-                getData( opType);
+                Log.i(TAG, "求购flagType--->" + flagType);
+                getData(opType);
                 formType = 2;//表示购买商品
                 tv_tan.setEnabled(true);
                 tv_tan.setTextColor(Color.parseColor("#ffffff"));
@@ -131,9 +121,9 @@ public class find_fragment extends Fragment {
             //刷新
             @Override
             public void onRefresh() {
-                page = 1;
+                pageRefresh = 1;
                 checkType = 2;
-                Log.i(TAG, "find_fragment中onRefresh: page is " + page);
+                Log.i(TAG, "find_fragment中onRefresh: page is " + pageRefresh);
                 //getData();
                 //
                 getData(opType);
@@ -143,9 +133,9 @@ public class find_fragment extends Fragment {
             //加载更多
             @Override
             public void onLoadmore() {
-                page++;
+                pageMore++;
                 checkType = 1;
-                Log.i(TAG, "find_fragment中onRefresh: page is " + page);
+                Log.i(TAG, "find_fragment中onRefresh: page is " + pageMore);
                 /*********/
                 //getData();
                 getData(opType);
@@ -157,11 +147,11 @@ public class find_fragment extends Fragment {
         image_ti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(formType == 1){//出售商品
-                    Intent intent = new Intent(getActivity(),find_sale_activity.class);
+                if (formType == 1) {//出售商品
+                    Intent intent = new Intent(getActivity(), find_sale_activity.class);
                     startActivity(intent);
-                }else if(formType == 2){//购买商品
-                    Intent intent = new Intent(getActivity(),find_buy_activity.class);
+                } else if (formType == 2) {//购买商品
+                    Intent intent = new Intent(getActivity(), find_buy_activity.class);
                     startActivity(intent);
                 }
             }
@@ -171,79 +161,69 @@ public class find_fragment extends Fragment {
     }
 
     private void getData(int opType) {
-
         Goods goods = new Goods();
         goods.setOpType(opType);
-
         goods.setCheckType(checkType);
-        goods.setPage(page);
+        if (checkType == 1){//加载更多
+            goods.setPage(pageMore);
+        }else {
+            goods.setPage(pageRefresh);
+        }
         goods.setPageSize(pageSize);
         goods.setFlagType(flagType);
 
         //将获取的对象转换成Json串
         Gson gson = new Gson();
         String userJsonStr = gson.toJson(goods, Goods.class);
-
         Log.i(TAG, "find_fragment中查询商品中userJsonStr is :" + userJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/findshow";
-
         //false
-        MyApplication application = (MyApplication)getActivity().getApplication();
+        MyApplication application = (MyApplication) getActivity().getApplication();
         application.setFlag(false);
         HttpUtils.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
                 //true
-                MyApplication application = (MyApplication)getActivity().getApplication();
+                MyApplication application = (MyApplication) getActivity().getApplication();
                 application.setFlag(true);
                 Log.d(TAG, "获取数据失败了" + e.toString());
                 networkState = NetworkStateUtils.isNetworkConnected(getContext());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(networkState == true ){
+                        if (networkState == true) {
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(VISIBLE);
-                            Toast.makeText(getActivity(),"你的服务器在开小差哦",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "你的服务器在开小差哦", Toast.LENGTH_SHORT).show();
 
-                        }else{
+                        } else {
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(VISIBLE);
-                            Toast.makeText(getActivity(),"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(getActivity(), "你的网络在开小差哦！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
                     Log.d(TAG, "获取数据成功了");
                     //true
-                    MyApplication application = (MyApplication)getActivity().getApplication();
+                    MyApplication application = (MyApplication) getActivity().getApplication();
                     application.setFlag(true);
                     Log.d(TAG, "find_fragment中response.code()==" + response.code());
-
                     final String jsonData = response.body().string();
                     Log.d(TAG, "find_fragment中查询商品中的response.body().string()==" + jsonData);
-
                     Gson gson = new Gson();
-                    Log.i(TAG, "开始解析jsonData");
                     ResponseBuy responseBuy = gson.fromJson(jsonData, ResponseBuy.class);
-                    Log.i(TAG, "结束解析jsonData");
                     Log.i(TAG, "结束解析responseBuy:" + responseBuy);
-                    //Log.i(TAG,"查询商品的列表："+ responseBuy.getGoodList().get(0));
                     final int flag = responseBuy.getFlag();
                     Log.i(TAG, "flag==" + flag);
 
                     final int flagType = responseBuy.getFlagType();
-                    Log.i(TAG, "find_fragment中flagType---> "+flagType);
-                    resultGoodsList = responseBuy.getGoodsList();
-
-
+                    Log.i(TAG, "find_fragment中flagType---> " + flagType);
+                    newResultGoodsList = responseBuy.getGoodsList();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -251,134 +231,105 @@ public class find_fragment extends Fragment {
                             iv_networkbad.setVisibility(View.GONE);
                             if (flag == 200) {
                                 Log.i(TAG, "run: success");
-
-
+                                if (newResultGoodsList.size() <=0) {
+                                    Toast.makeText(getActivity(), "没有更多内容了哦！", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 //摊位的列表展示
-                                if(flagType == 1){
-                                    saleGoodsList = resultGoodsList;
-                                    if(saleGoodsList == null){
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(), "您的登录信息已过期，请重新登录！", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        return;
-                                    }
-
-                                    if (saleGoodsList.size() == 0) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(), "已经到达底线了哦！", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        //将上一次的resultGoodsList加进来显示
-                                        for (int i = 0; i < saleGoodsList.size(); i++) {
+                                if (flagType == 1) {
+                                    saleGoodsList = newResultGoodsList;
+                                    //上拉加载
+                                    if (checkType == 1) {
+                                        //将newResultGoodsList加到sale_allGoodsList的下面显示，使其按顺序排序
+                                        for (int i = 0; i < newResultGoodsList.size(); i++) {
                                             boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
-                                            for(int j = 0 ;j<sale_allGoodsList.size();j++){
-
-                                                if(sale_allGoodsList.get(j).getGoodsID().equals(saleGoodsList.get(i).getGoodsID())){
+                                            for (int j = 0; j < sale_allGoodsList.size(); j++) {
+                                                if (sale_allGoodsList.get(j).getGoodsID().equals(newResultGoodsList.get(i).getGoodsID())) {
                                                     repeat = true;
+                                                    break;
                                                 }
-
                                             }
-                                            if (repeat == false){
-                                                sale_allGoodsList.add(saleGoodsList.get(i));
-                                                Log.i(TAG, "home_fragment中sale_allGoodsList.size() " + sale_allGoodsList.size());
+                                            if (repeat == false) {
+                                                sale_allGoodsList.add(newResultGoodsList.get(i));
+                                                Log.i(TAG, "home_fragment中allGoodsList.size() " + sale_allGoodsList.size());
                                             }
                                         }
+                                        GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), sale_allGoodsList);
+                                        recyclerView.setAdapter(adapter);
+                                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);//自动滑动到底部
                                     }
-                                    if(allGoodsList.size() == 0){
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(),"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
+                                    //下拉刷新
+                                    if (checkType == 2) {
+                                        //将sale_allGoodsList的内容加到newResultGoodsList下面显示，使得最新的展示在第一页
+                                        for (int i = 0; i < sale_allGoodsList.size(); i++) {
+                                            boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
+                                            for (int j = 0; j < newResultGoodsList.size(); j++) {
+                                                if (newResultGoodsList.get(j).getGoodsID().equals(sale_allGoodsList.get(i).getGoodsID())) {
+                                                    repeat = true;
+                                                    break;
+                                                }
                                             }
-                                        });
+                                            if (repeat == false) {
+                                                newResultGoodsList.add(sale_allGoodsList.get(i));
+                                                Log.i(TAG, "home_fragment中allGoodsList.size() " + sale_allGoodsList.size());
+                                            }
+                                        }
+                                        sale_allGoodsList = newResultGoodsList;
+                                        GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), sale_allGoodsList);
+                                        recyclerView.setAdapter(adapter);
+                                        //recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                                     }
 
                                 }
-
                                 //求购列表展示
-                                if(flagType == 2){
-                                    buyGoodsList = resultGoodsList;
-                                    if(buyGoodsList == null){
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(), "您的登录信息已过期，请重新登录！", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        return;
-                                    }
-
-                                    if (buyGoodsList.size() == 0) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(), "已经到达底线了哦！", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        //将上一次的resultGoodsList加进来显示
-                                        for (int i = 0; i < buyGoodsList.size(); i++) {
+                                if (flagType == 2) {
+                                    buyGoodsList = newResultGoodsList;
+                                    //上拉加载
+                                    if (checkType == 1) {
+                                        //将newResultGoodsList加到buy_allGoodsList的下面显示，使其按顺序排序
+                                        for (int i = 0; i < newResultGoodsList.size(); i++) {
                                             boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
-                                            for(int j = 0 ;j<buy_allGoodsList.size();j++){
-
-                                                if(buy_allGoodsList.get(j).getGoodsID().equals(buyGoodsList.get(i).getGoodsID())){
+                                            for (int j = 0; j < buy_allGoodsList.size(); j++) {
+                                                if (buy_allGoodsList.get(j).getGoodsID().equals(newResultGoodsList.get(i).getGoodsID())) {
                                                     repeat = true;
+                                                    break;
                                                 }
-
                                             }
-                                            if (repeat == false){
-                                                buy_allGoodsList.add(buyGoodsList.get(i));
-                                                Log.i(TAG, "home_fragment中buy_allGoodsList.size() " + buy_allGoodsList.size());
+                                            if (repeat == false) {
+                                                buy_allGoodsList.add(newResultGoodsList.get(i));
+                                                Log.i(TAG, "home_fragment中allGoodsList.size() " + buy_allGoodsList.size());
                                             }
                                         }
+                                        GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), buy_allGoodsList);
+                                        recyclerView.setAdapter(adapter);
+                                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);//自动滑动到底部
                                     }
-
-                                    if(allGoodsList.size() == 0){
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(),"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
+                                    //下拉刷新
+                                    if (checkType == 2) {
+                                        //将buy_allGoodsList的内容加到newResultGoodsList下面显示，使得最新的展示在第一页
+                                        for (int i = 0; i < buy_allGoodsList.size(); i++) {
+                                            boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
+                                            for (int j = 0; j < newResultGoodsList.size(); j++) {
+                                                if (newResultGoodsList.get(j).getGoodsID().equals(buy_allGoodsList.get(i).getGoodsID())) {
+                                                    repeat = true;
+                                                    break;
+                                                }
                                             }
-                                        });
+                                            if (repeat == false) {
+                                                newResultGoodsList.add(buy_allGoodsList.get(i));
+                                                Log.i(TAG, "home_fragment中allGoodsList.size() " + buy_allGoodsList.size());
+                                            }
+                                        }
+                                        buy_allGoodsList = newResultGoodsList;
+                                        GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), buy_allGoodsList);
+                                        recyclerView.setAdapter(adapter);
+                                        //recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                                     }
-
-
                                 }
-
-                                //摊位列表适配
-                                if(flagType == 1){
-                                    GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(),sale_allGoodsList);
-                                    recyclerView.setAdapter(adapter);
-                                }
-                                //求购列表适配
-                                if(flagType == 2){
-                                    GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(),buy_allGoodsList);
-                                    recyclerView.setAdapter(adapter);
-                                }
-
-//                                Toast.makeText(getActivity(), "查询成功！", Toast.LENGTH_SHORT).show();
-
                             } else if (flag == 30001) {
-
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "登录信息已失效,请再次登录", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(getActivity(), "登录信息已失效,请再次登录", Toast.LENGTH_SHORT).show();
                             } else {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "查询失败！", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(getActivity(), "查询失败！", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

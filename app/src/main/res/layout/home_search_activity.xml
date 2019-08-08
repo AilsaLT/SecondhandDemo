@@ -9,72 +9,55 @@
 
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="12dp"
+        android:orientation="horizontal"
         android:background="#0895e7">
 
-        <RelativeLayout
-            android:id="@+id/rl_query"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:clickable="true"
-            android:background="@drawable/layout_left_shape">
-            <Button
-                android:id="@+id/bt_query"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:textColor="#fff"
-                android:background="@drawable/home_query"/>
-        </RelativeLayout>
-
-
-        <EditText
-            android:id="@+id/et_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#fff"
-            android:layout_toRightOf="@+id/rl_query"
-            android:hint="请输入搜索内容"/>
-
+            android:background="@drawable/fanhui"/>
 
         <RelativeLayout
             android:id="@+id/rl_clear"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
             android:clickable="true"
-            android:layout_toLeftOf="@+id/bt_cancel"
-            android:background="@drawable/layout_right_shape">
-
+            android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/rl_clear"
+            android:background="@drawable/layout_shape">
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff"
+                android:hint="请输入搜索内容"/>
             <Button
                 android:id="@+id/bt_clear"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:textColor="#fff"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/home_clear"/>
-
         </RelativeLayout>
-
-
-
         <Button
-            android:id="@+id/bt_cancel"
+            android:id="@+id/bt_query"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="取消"
+            android:text="搜索"
             android:textColor="#fff"
+            
             android:background="#0895e7"/>
-
-
-
-
-    </RelativeLayout>
-
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

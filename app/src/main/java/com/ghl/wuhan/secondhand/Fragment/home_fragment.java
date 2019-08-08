@@ -45,15 +45,14 @@ public class home_fragment extends Fragment implements OnBannerListener {
     private Banner banner;
     private ArrayList<Integer> list_path;
     private ArrayList<String> list_title;
-    private ImageView image_back,iv_networkbad;
-
+    private ImageView image_back, iv_networkbad;
     private int opType = 90004;//操作类型
-    //查询列表中的属性
-    RecyclerView recyclerView;
-    List<Goods> resultGoodsList = new ArrayList<Goods>();
+    RecyclerView recyclerView;//查询列表中的属性
+    List<Goods> newResultGoodsList = new ArrayList<Goods>();
     List<Goods> allGoodsList = new ArrayList<Goods>();
     private SpringView springView;//下拉刷新，上拉加载的控件
-    public int page = 1;//页数
+    private int pageRefresh;//刷新页数
+    private int pageMore = 1;//加载更多页数
     protected int checkType = 1;//查询方式 1---上拉加载更多  2---下拉刷新
     public int pageSize = 5;//数据条数
     private boolean networkState;//网络状态
@@ -61,63 +60,40 @@ public class home_fragment extends Fragment implements OnBannerListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //  return super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.home_fragment, container, false);
-
-
-
-
+        //初始化视图界面
         Banner banner = (Banner) view.findViewById(R.id.banner);
         ImageView image_back = (ImageView) view.findViewById(R.id.image_back);
-
         iv_networkbad = (ImageView) view.findViewById(R.id.iv_networkbad);
-        //默认状态是不可见
-        iv_networkbad.setVisibility(View.GONE);
-
-        //初始化部分
+        iv_networkbad.setVisibility(View.GONE); //默认状态是不可见
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         springView = (SpringView) view.findViewById(R.id.springView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-
-
-        getData( opType);
+        getData(opType);
         springView.setHeader(new DefaultHeader(getActivity()));
         springView.setFooter(new DefaultFooter(getActivity()));
-
         springView.setListener(new SpringView.OnFreshListener() {
-            //刷新
             @Override
-            public void onRefresh() {
-                page = 1;
+            public void onRefresh() { //刷新
+                pageRefresh = 1;
                 checkType = 2;
-                Log.i(TAG, "onRefresh: page is " + page);
-                //getData();
-//                getData(token, opType);
+                Log.i(TAG, "onRefresh: pageRefresh is " + pageRefresh);
                 getData(opType);
                 springView.onFinishFreshAndLoad();
             }
 
-            //加载更多
             @Override
-            public void onLoadmore() {
-                page++;
+            public void onLoadmore() { //加载更多
+                pageMore++;
                 checkType = 1;
-                Log.i(TAG, "onRefresh: page is " + page);
-                /*********/
-                //getData();
-//                getData(token, opType);
+                Log.i(TAG, "loadPage: pageMore is " + pageMore);
                 getData(opType);
-                /*********/
                 springView.onFinishFreshAndLoad();
             }
         });
-
         list_path = new ArrayList<>();
-        //放标题的集合
-        list_title = new ArrayList<>();
-
+        list_title = new ArrayList<>();//放标题的集合
         list_path.add(R.drawable.navigation_one);
         list_path.add(R.drawable.navigation_two);
         list_path.add(R.drawable.navigation_three);
@@ -159,90 +135,68 @@ public class home_fragment extends Fragment implements OnBannerListener {
                 startActivity(intent);
             }
         });
-
-
         return view;
-
     }
 
     @Override
     public void OnBannerClick(int position) {
-        Log.i("tag", "你点了第" + position + "张轮播图");
+        //        Log.i("tag", "你点了第" + position + "张轮播图");
     }
 
     private void getData(int opType) {
         Goods goods = new Goods();
-//        goods.setToken(token);
         goods.setOpType(opType);
-
         goods.setCheckType(checkType);
-        goods.setPage(page);
+        if (checkType == 1){//加载更多
+            goods.setPage(pageMore);
+        }else {
+            goods.setPage(pageRefresh);
+        }
         goods.setPageSize(pageSize);
-
-        //将获取的对象转换成Json串
         Gson gson = new Gson();
-        String buyJsonStr = gson.toJson(goods, Goods.class);
-        Log.i(TAG, "查询商品中buyJsonStr is :" + buyJsonStr);
+        String recommendJsonStr = gson.toJson(goods, Goods.class);
+//        Log.i(TAG, "home_fragment-->recommendJsonStr is :-->" + recommendJsonStr);
         String url = "http://47.105.183.54:8080/Proj20/recommend";
-
-        //false
-        MyApplication application = (MyApplication)getActivity().getApplication();
-        application.setFlag(false);
-        HttpUtils.sendOkHttpRequest(url, buyJsonStr, new okhttp3.Callback() {
-
+        MyApplication application = (MyApplication) getActivity().getApplication();
+        application.setFlag(false);//false
+        HttpUtils.sendOkHttpRequest(url, recommendJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
-                //true
-                MyApplication application = (MyApplication)getActivity().getApplication();
-                application.setFlag(true);
+                MyApplication application = (MyApplication) getActivity().getApplication();
+                application.setFlag(true); //true
                 Log.d(TAG, "获取数据失败了" + e.toString());
-                //判断网络状态
-                networkState = NetworkStateUtils.isNetworkConnected(getContext());
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            if(networkState == true){
+                networkState = NetworkStateUtils.isNetworkConnected(getContext()); //判断网络状态
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (networkState == true) {
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(VISIBLE);
-                            Toast.makeText(getActivity(),"你的服务器在开小差哦",Toast.LENGTH_SHORT).show();
-                        }else {
-                                recyclerView.setVisibility(View.GONE);
-                                iv_networkbad.setVisibility(VISIBLE);
-                                Toast.makeText(getActivity(),"你的网络在开小差哦！",Toast.LENGTH_SHORT).show();
-                            }
+                            Toast.makeText(getActivity(), "你的服务器在开小差哦", Toast.LENGTH_SHORT).show();
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            iv_networkbad.setVisibility(VISIBLE);
+                            Toast.makeText(getActivity(), "你的网络在开小差哦！", Toast.LENGTH_SHORT).show();
                         }
-
-                    });
-
+                    }
+                });
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
-                    Log.d(TAG, "获取数据成功了");
-                    //true
-                    MyApplication application = (MyApplication)getActivity().getApplication();
-                    application.setFlag(true);
-
-                    Log.d(TAG, "response.code()==" + response.code());
-
-                    final String jsonData = response.body().string();
-                    Log.d(TAG, "查询商品中的response.body().string()==" + jsonData);
-
+//                    Log.d(TAG, "获取数据成功了");
+                    MyApplication application = (MyApplication) getActivity().getApplication();
+                    application.setFlag(true);//true
+//                    Log.d(TAG, "response.code()==" + response.code());
+                    final String resultJsonData = response.body().string();//后台返回数据
+//                    Log.d(TAG, "home_fragment-->resultJsonData: " + resultJsonData);
                     Gson gson = new Gson();
-                    Log.i(TAG, "开始解析jsonData");
-                    ResponseBuy responseBuy = gson.fromJson(jsonData, ResponseBuy.class);
-                    Log.i(TAG, "结束解析jsonData");
-                    Log.i(TAG, "结束解析responseBuy:" + responseBuy);
-                    //Log.i(TAG,"查询商品的列表："+ responseBuy.getGoodList().get(0));
+                    ResponseBuy responseBuy = gson.fromJson(resultJsonData, ResponseBuy.class);//解析
+//                    Log.i(TAG, "结束解析responseBuy:" + responseBuy);
                     final int flag = responseBuy.getFlag();
                     Log.i(TAG, "flag==" + flag);
-
-                    resultGoodsList = responseBuy.getGoodsList();
-                    //Log.i(TAG, "resultGoodsList==" + resultGoodsList);
-
+                    newResultGoodsList = responseBuy.getGoodsList();//获取的商品列表
+                    Log.i(TAG, "home_fragement--newResultGoodsList"+newResultGoodsList);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -250,80 +204,62 @@ public class home_fragment extends Fragment implements OnBannerListener {
                             iv_networkbad.setVisibility(View.GONE);
                             if (flag == 200) {
                                 Log.i(TAG, "run: success");
-
-                                if(resultGoodsList == null){
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getActivity(), "您的登录信息已过期，请重新登录！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                //如果一直上拉刷新，当newResultGoodsList返回为null，说明数据库里已经没有更多数据了
+                                if (newResultGoodsList.size() <=0) {
+                                    Toast.makeText(getActivity(), "没有更多内容了哦！", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                if (resultGoodsList.size() == 0) {
-
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getActivity(), "已经到达底线了哦！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                } else {
-                                    //将上一次的resultGoodsList加进来显示
-                                    for (int i = 0; i < resultGoodsList.size(); i++) {
-
+                                //上拉加载
+                                if (checkType == 1) {
+                                    //将newResultGoodsList加到allGoodsList的下面显示，使其按顺序排序
+                                    for (int i = 0; i < newResultGoodsList.size(); i++) {
                                         boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
-                                        for(int j = 0 ;j<allGoodsList.size();j++){
-
-                                            if(allGoodsList.get(j).getGoodsID().equals(resultGoodsList.get(i).getGoodsID())){
+                                        for (int j = 0; j < allGoodsList.size(); j++) {
+                                            if (allGoodsList.get(j).getGoodsID().equals(newResultGoodsList.get(i).getGoodsID())) {
                                                 repeat = true;
+                                                break;
                                             }
-
                                         }
-                                        if (repeat == false){
-                                            allGoodsList.add(resultGoodsList.get(i));
+                                        if (repeat == false) {
+                                            allGoodsList.add(newResultGoodsList.get(i));
                                             Log.i(TAG, "home_fragment中allGoodsList.size() " + allGoodsList.size());
                                         }
-
                                     }
+                                    GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), allGoodsList);
+                                    recyclerView.setAdapter(adapter);
+                                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);//自动滑动到底部
                                 }
-
-                                if(allGoodsList.size() == 0){
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getActivity(),"暂时没有新的数据哦！",Toast.LENGTH_SHORT).show();
+                                //下拉刷新
+                                if (checkType == 2) {
+                                    //将allGoodsList的内容加到newResultGoodsList下面显示，使得最新的展示在第一页
+                                    for (int i = 0; i < allGoodsList.size(); i++) {
+                                        boolean repeat = false;//判断加入新的List中的getGoodsID是否与旧的List中的getGoodsID是否一样一样则不重复加载
+                                        for (int j = 0; j < newResultGoodsList.size(); j++) {
+                                            if (newResultGoodsList.get(j).getGoodsID().equals(allGoodsList.get(i).getGoodsID())) {
+                                                repeat = true;
+                                                break;
+                                            }
                                         }
-                                    });
+                                        if (repeat == false) {
+                                            newResultGoodsList.add(allGoodsList.get(i));
+                                            Log.i(TAG, "home_fragment中allGoodsList.size() " + allGoodsList.size());
+                                        }
+                                    }
+                                    allGoodsList = newResultGoodsList;
+                                    GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(), allGoodsList);
+                                    recyclerView.setAdapter(adapter);
+//                                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                                 }
-
-                                GoodsItemAdapter adapter = new GoodsItemAdapter(getContext(),allGoodsList);
-                                recyclerView.setAdapter(adapter);
 
                             } else if (flag == 30001) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "登录信息已失效,请再次登录", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(getActivity(), "登录信息已失效,请再次登录", Toast.LENGTH_SHORT).show();
                             } else {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "查询失败！", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(getActivity(), "查询失败！", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
             }
         });
-
-
     }
-
-
 }

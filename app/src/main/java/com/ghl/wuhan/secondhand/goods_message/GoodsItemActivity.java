@@ -26,6 +26,7 @@ import okhttp3.Response;
 public class GoodsItemActivity extends AppCompatActivity {
     //属性定义
     private String TAG = "TAG";
+    private ImageView iv_back;//返回
     private ImageView iv_image;
     private TextView tv_goodsId, tv_goodsName, tv_goodsPrice, tv_goodsUnit, tv_goodsQuantity,tv_goodsQq;
     private ImageView iv_collect;
@@ -52,8 +53,6 @@ public class GoodsItemActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("collect",MODE_PRIVATE).edit();
         editor.putString("goodsID",goods.getGoodsID());
         editor.commit();
-
-
         //判断从GoodsItemAdapter接收到的数据是否为空
         if (goods == null) {
             runOnUiThread(new Runnable() {
@@ -65,16 +64,12 @@ public class GoodsItemActivity extends AppCompatActivity {
         }
         //将对应的item显示在对应的位置
         show(goods);
-
-
-
         CollectBO collectBO = new CollectBO();
         SharedPreferences preferences = getSharedPreferences("userinfo",MODE_PRIVATE);
         token = preferences.getString("token","");
         Log.i("TAG","GoodsItemActivity中token--->"+token);
         userid = preferences.getString("userid","");
         Log.i("TAG", "GoodsItemActivity中userid--->"+userid);
-
         SharedPreferences pref = getSharedPreferences("collect",MODE_PRIVATE);
         goodsID = pref.getString("goodsID","");
         Log.i(TAG, "GoodsItemActivity中goodsID--->"+goodsID);
@@ -102,8 +97,14 @@ public class GoodsItemActivity extends AppCompatActivity {
                 collectBO.setToken(token);
                 collectBO.setUserid(userid);
                 collectBO.setGoodsID(goodsID);
-
                 collectGoods(collectBO);
+            }
+        });
+        //返回
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -133,6 +134,7 @@ public class GoodsItemActivity extends AppCompatActivity {
 
     //初始化控件
     public void init() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_image = (ImageView) findViewById(R.id.iv_image);
         tv_goodsId = (TextView) findViewById(R.id.tv_goodsId);
         tv_goodsName = (TextView) findViewById(R.id.tv_goodsName);
@@ -176,33 +178,27 @@ public class GoodsItemActivity extends AppCompatActivity {
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
                     userVO = gson.fromJson(collectJsonStr, UserVO.class);
-                    int flag = userVO.getFlag();
-                    if (flag == 200) {
+                    final int flag = userVO.getFlag();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(collectFlag == 1){
-                                    Toast.makeText(GoodsItemActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
-                                    state = 1;
-                                    iv_collect.setImageResource(R.drawable.goods_collect_yellow);
-                                }else{
-                                    Toast.makeText(GoodsItemActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
-                                    state = 0;
-                                    iv_collect.setImageResource(R.drawable.goods_collect_gray);
+                                if (flag == 200){
+                                    if(collectFlag == 1){
+                                        Toast.makeText(GoodsItemActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                                        state = 1;
+                                        iv_collect.setImageResource(R.drawable.goods_collect_yellow);
+                                    }else{
+                                        Toast.makeText(GoodsItemActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
+                                        state = 0;
+                                        iv_collect.setImageResource(R.drawable.goods_collect_gray);
+                                    }
+                                    lastState = state;
                                 }
-                                lastState = state;
+                                if (flag == 201){
+                                    Toast.makeText(GoodsItemActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
-                    }
-
-                    if (flag == 201) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(GoodsItemActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
                 }
             }
         });
@@ -239,27 +235,22 @@ public class GoodsItemActivity extends AppCompatActivity {
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
                     userVO = gson.fromJson(collectJsonStr, UserVO.class);
-                    int flag = userVO.getFlag();
+                    final int flag = userVO.getFlag();
                     collectFlag = userVO.getCollectFlag();
-                    if (flag == 40001) {//商品已被收藏
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (flag == 40001){//商品已被收藏
                                 iv_collect.setImageResource(R.drawable.goods_collect_yellow);
                                 state = 1;
                                 lastState = state;
-                            }
-                        });
-                    }else{//未被收藏
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            }else {//未被收藏
                                 iv_collect.setImageResource(R.drawable.goods_collect_gray);
                                 state = 0;
                                 lastState = state;
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
         });

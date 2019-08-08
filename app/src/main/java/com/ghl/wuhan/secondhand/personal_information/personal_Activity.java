@@ -31,8 +31,6 @@ public class personal_Activity extends AppCompatActivity implements View.OnClick
         init();
         //
 
-
-
 //        byte [] bts_uimages = Base64.decode(avatar.getBytes(),Base64.DEFAULT);
 //        Log.i(TAG,"personal_changeActivity中的bts_uimages--->"+bts_uimages);
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(bts_uimages,0,bts_uimages.length,null);
@@ -61,20 +59,40 @@ public class personal_Activity extends AppCompatActivity implements View.OnClick
             Glide.with(this).load(pictureUrl).error(R.drawable.avatar_loading_fail).into(icon_image);
             //QQ号
             String qq = preferences.getString("qq","");
-            tv_qq_show.setText(qq);
+            if (qq == null || qq.equals("")){
+                tv_qq_show.setText("未填写");
+            }else {
+                tv_qq_show.setText(qq);
+            }
+
             //微信号
             String wichat = preferences.getString("weixin","");
-            tv_wichat_show.setText(wichat);
+            if (wichat == null || wichat.equals("")){
+                tv_wichat_show.setText("未填写");
+            }else {
+                tv_wichat_show.setText(wichat);
+            }
+
             //电话
             String phone = preferences.getString("phone","");
-            tv_phone_show.setText(phone);
+            if (phone == null || phone.equals("")){
+                tv_phone_show.setText("未填写");
+            }else {
+                tv_phone_show.setText(phone);
+            }
+
             //性别
             int sex = preferences.getInt("sex", 0);
-            if(sex == 0){
-                tv_sex_show.setText("女");
-            }else if(sex == 1){
-                tv_sex_show.setText("男");
+            if (sex != 0 && sex != 1){
+                tv_sex_show.setText("未填写");
+            }else {
+                if(sex == 0){
+                    tv_sex_show.setText("女");
+                }else if(sex == 1){
+                    tv_sex_show.setText("男");
+                }
             }
+
         }
 
 

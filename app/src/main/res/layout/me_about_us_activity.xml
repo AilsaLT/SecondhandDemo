@@ -8,10 +8,10 @@
     <!--标题栏-->
     <RelativeLayout
         android:id="@+id/rl_back"
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#0895e7"
+        android:clickable="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,8 +20,8 @@
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
-            android:clickable="true"
-            android:background="@drawable/fanhui"/>
+            android:background="@drawable/fanhui"
+            android:clickable="true"/>
 
         <TextView
             android:id="@+id/titleView1"
@@ -35,16 +35,56 @@
 
 
     </RelativeLayout>
-    <ScrollView android:layout_height="match_parent"
-                android:layout_width="match_parent"
-        android:padding="10dp">
-        <TextView
-            android:id="@+id/tv1"
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:scrollbars="none"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:singleLine="false"
-            android:text="          简介：这里主要介绍一下三个问题：第一，为什么要做这个项目--二手市场，而不做别的市场？第二，在做这个项目时个人觉得遇到的最难的问题是什么？第三，我在做这个项目时的一些感受和想法。"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_us"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:lineSpacingMultiplier="1.2"
+                android:singleLine="false"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/tv_mainbody1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:lineSpacingMultiplier="1.2"
+                android:singleLine="false"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/tv_mainbody2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:lineSpacingMultiplier="1.2"
+                android:singleLine="false"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/tv_mainbody3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:lineSpacingMultiplier="1.2"
+                android:singleLine="false"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

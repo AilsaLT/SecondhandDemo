@@ -48,7 +48,7 @@ public class me_user_register extends AppCompatActivity {
     //属性定义
     private RelativeLayout rl_back;
     private String TAG = "TAG";
-    private String uname,upassword,uqr;
+    private String uname, upassword, uqr;
     private String pictureUrl;//图片Url
 
     private CircleImageView icon_image;
@@ -58,12 +58,10 @@ public class me_user_register extends AppCompatActivity {
     private EditText et_uname, et_password, et_qr;//用户名,密码和密码的确认
     private Button btn_register;//提交用户名和密码使用
     private final int opType = 90001;//操作类型
-
     private String uphone;
     private int sex;
     private Dialog progressDialog;
     private SharedPreferences.Editor editor;
-
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
     public static final int CROP_IMAGE = 3;
@@ -113,8 +111,6 @@ public class me_user_register extends AppCompatActivity {
                 break;
         }
     }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,10 +121,6 @@ public class me_user_register extends AppCompatActivity {
 
         //初始化
         init();
-
-        Log.i(TAG, "************onCreate init********");
-
-
         //点击弹出底部弹框，选择拍照或相册进行照片的选择
         icon_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,8 +161,6 @@ public class me_user_register extends AppCompatActivity {
                 });
             }
         });
-
-
         //点击注册
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +174,11 @@ public class me_user_register extends AppCompatActivity {
                 Log.i(TAG, "upassword is :" + upassword);
                 String uuid = UUID.randomUUID().toString();
                 pictureUrl = COSPictureUtils.getPitureUrl();
-
+                //判断EditText输入框上的内容是否为空
+                if (uname.equals("") || uname == null || upassword.equals("") || upassword == null || uqr.equals("") || uqr == null || pictureUrl.equals("") || pictureUrl == null) {
+                    Toast.makeText(me_user_register.this, "请输入完整的信息！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 UserBO userBO = new UserBO();
                 userBO.setUname(uname);
                 userBO.setUpassword(upassword);
@@ -193,40 +187,31 @@ public class me_user_register extends AppCompatActivity {
                 userBO.setOpType(opType);
                 userBO.setUid(uuid);
                 userBO.setPictureUrl(pictureUrl);
-
-
+                //密码格式限制
                 //6-16位数字字母混合,不能全为数字,不能全为字母,首位不能为数字
                 String regex = "^(?![0-9])(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";//密码格式验证(正则)
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(upassword);
                 boolean isMatch = m.matches();
-
-                if (uname.isEmpty() && upassword.isEmpty() && uqr.isEmpty()) {
-                    Toast.makeText(me_user_register.this, "请输入注册信息", Toast.LENGTH_SHORT).show();
-                } else if (uname.isEmpty()) {
-                    Toast.makeText(me_user_register.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
-                } else if (upassword.isEmpty()) {
-                    Toast.makeText(me_user_register.this, "密码不能为空", Toast.LENGTH_SHORT).show();
-                } else if (isMatch == false) {
+                if (isMatch == false) {
                     Toast.makeText(me_user_register.this, "密码格式不对，6-16位数字字母混合,不能全为数字,不能全为字母,首位不能为数字", Toast.LENGTH_LONG).show();
-                } else if (uqr.isEmpty()) {
-                    Toast.makeText(me_user_register.this, "请再次确认密码", Toast.LENGTH_SHORT).show();
-                } else if (upassword.equals(uqr) == false) {
-                    Toast.makeText(me_user_register.this, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
-                } else {
-                    //进度条的设置
-                    progressDialog = DialogUIUtils.showLoadingDialog(me_user_register.this, "正在注册......");
-                    progressDialog.show();
-                    //点击物理返回键是否可取消dialog
-                    progressDialog.setCancelable(true);
-                    //点击dialog之外 是否可取消
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    //发送OkHttp请求
-                    register(userBO);
+                    return;
                 }
+                if (!upassword.equals(uqr)) {
+                    Toast.makeText(me_user_register.this, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //进度条的设置
+                progressDialog = DialogUIUtils.showLoadingDialog(me_user_register.this, "正在注册......");
+                progressDialog.show();
+                //点击物理返回键是否可取消dialog
+                progressDialog.setCancelable(true);
+                //点击dialog之外 是否可取消
+                progressDialog.setCanceledOnTouchOutside(false);
+                //发送OkHttp请求
+                register(userBO);
             }
         });
-
         //取消注册
         rl_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,8 +219,6 @@ public class me_user_register extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     //初始化
@@ -254,15 +237,12 @@ public class me_user_register extends AppCompatActivity {
         Gson gson = new Gson();
         String userJsonStr = gson.toJson(userBO, UserBO.class);
         Log.i(TAG, "me_user_rigister中userJsonStr :" + userJsonStr);
-
-
         String url = "http://47.105.183.54:8080/Proj20/register";
         HttpUtils.sendOkHttpRequest(url, userJsonStr, new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d(TAG, "获取数据失败了" + e.toString());
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
@@ -271,70 +251,45 @@ public class me_user_register extends AppCompatActivity {
 
                     final String s = response.body().string();
                     Log.d(TAG, "response.body().string()==" + s);
-
-                    //将response.body().string()转换成对象
                     UserVO userVO = new UserVO();
                     Gson gson = new Gson();
                     userVO = gson.fromJson(s, UserVO.class);
-                    int flag = userVO.getFlag();
-
-                    if (flag == 200) {
-
-                        //注册成功后将用户名存储起来
-                        editor = getSharedPreferences("userinfo", MODE_PRIVATE).edit();
-                        editor.putString("uname", uname);//昵称
-                        editor.commit();
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    final int flag = userVO.getFlag();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (flag == 200){
+                                //注册成功后将用户名存储起来
+                                editor = getSharedPreferences("userinfo", MODE_PRIVATE).edit();
+                                editor.putString("uname", uname);//昵称
+                                editor.commit();
                                 Toast.makeText(me_user_register.this, "您已注册成功！", Toast.LENGTH_SHORT).show();
-                                //使进度条不可见
-                                dismiss(progressDialog);
+                                Intent intent = new Intent(me_user_register.this, me_user_login.class);
+                                startActivity(intent);
+                                finish();
                             }
-                        });
-
-                        Intent intent = new Intent(me_user_register.this, me_user_login.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                    if (flag == 10002)
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            if (flag == 10002){
                                 Toast.makeText(me_user_register.this, "该用户名已存在，注册失败！", Toast.LENGTH_SHORT).show();
                                 //使进度条不可见
                                 dismiss(progressDialog);
                             }
-                        });
-                    if (flag == 10003)
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            if (flag == 10003){
                                 Toast.makeText(me_user_register.this, "用户名为空，注册失败！", Toast.LENGTH_SHORT).show();
                                 //使进度条不可见
                                 dismiss(progressDialog);
                             }
-                        });
-                    if (flag == 10004)
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            if (flag == 10004){
                                 Toast.makeText(me_user_register.this, "密码为空，注册失败！", Toast.LENGTH_SHORT).show();
                                 //使进度条不可见
                                 dismiss(progressDialog);
                             }
-                        });
-                    if (flag == 88888)
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            if (flag == 88888){
                                 Toast.makeText(me_user_register.this, "json parase error,please check your josn str.", Toast.LENGTH_SHORT).show();
                                 //使进度条不可见
                                 dismiss(progressDialog);
                             }
-                        });
+                        }
+                    });
                 }
             }
         });
@@ -381,5 +336,4 @@ public class me_user_register extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
 }
