@@ -1,13 +1,18 @@
 package com.ghl.wuhan.secondhand.find_activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +119,12 @@ public class find_buy_activity extends AppCompatActivity {
         image_touxiang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                picsTokenPhoto();
+                //添加运行时权限
+                if (ContextCompat.checkSelfPermission(find_buy_activity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(find_buy_activity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                }else {
+                    picsTokenPhoto();
+                }
             }
         });
 
@@ -278,6 +288,21 @@ public class find_buy_activity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    picsTokenPhoto();
+                }else {
+                    Toast.makeText(this,"您拒绝了访问SD卡的权限",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     //发送OkHttp请求
