@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(String.valueOf(9));
         //无消息时可以将它隐藏即可
         textView.setVisibility(View.INVISIBLE);
-
-
         bottomNavigationView.setOnNavigationItemSelectedListener(changeFragment);
+
+
         me_fragment.setArguments(bundle);
     }
 
@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
             if(application.isFlag() == true){//只有当前的fragment的网络请求结束后才能切换到下一个fragment
                 switch (item.getItemId()) {
                     case R.id.navigation_home: {
-
-
                         if (lastfragment != 0) {
                             switchFragment(lastfragment, 0);
                             lastfragment = 0;
@@ -122,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                         if (lastfragment != 3) {
                             switchFragment(lastfragment, 3);
                             lastfragment = 3;
-
                         }
 
                         return true;
@@ -131,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
 
             return false;
         }

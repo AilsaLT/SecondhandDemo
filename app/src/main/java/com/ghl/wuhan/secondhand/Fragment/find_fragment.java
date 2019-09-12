@@ -100,7 +100,6 @@ public class find_fragment extends Fragment {
         tv_qiu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 flagType = 2;//表示方式为求购
                 Log.i(TAG, "求购flagType--->" + flagType);
                 getData(opType);
@@ -109,11 +108,8 @@ public class find_fragment extends Fragment {
                 tv_tan.setTextColor(Color.parseColor("#ffffff"));
                 tv_qiu.setEnabled(false);
                 tv_qiu.setTextColor(Color.parseColor("#0895e7"));
-
             }
         });
-
-
         springView.setHeader(new DefaultHeader(getActivity()));
         springView.setFooter(new DefaultFooter(getActivity()));
 
@@ -136,10 +132,7 @@ public class find_fragment extends Fragment {
                 pageMore++;
                 checkType = 1;
                 Log.i(TAG, "find_fragment中onRefresh: page is " + pageMore);
-                /*********/
-                //getData();
                 getData(opType);
-                /*********/
                 springView.onFinishFreshAndLoad();
             }
         });

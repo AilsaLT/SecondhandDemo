@@ -92,6 +92,12 @@ public class me_collectActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//    }
+
     //初始化控件
     public void init() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
@@ -110,7 +116,6 @@ public class me_collectActivity extends AppCompatActivity {
 
     //发送OkHttp请求
     private void getData() {
-
         SharedPreferences preferences = getSharedPreferences("userinfo", MODE_PRIVATE);
         token = preferences.getString("token", "");
         userid = preferences.getString("userid", "");
@@ -125,7 +130,6 @@ public class me_collectActivity extends AppCompatActivity {
         }
         goods.setPageSize(pageSize);
         goods.setFlagType(flagType);
-
 
         //将获取的对象转换成Json串
         Gson gson = new Gson();
@@ -145,17 +149,14 @@ public class me_collectActivity extends AppCompatActivity {
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(View.VISIBLE);
                             Toast.makeText(me_collectActivity.this, "你的服务器在开小差哦", Toast.LENGTH_SHORT).show();
-
                         } else {
                             recyclerView.setVisibility(View.GONE);
                             iv_networkbad.setVisibility(View.VISIBLE);
                             Toast.makeText(me_collectActivity.this, "你的网络在开小差哦！", Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
@@ -234,8 +235,6 @@ public class me_collectActivity extends AppCompatActivity {
                                 Toast.makeText(me_collectActivity.this, "查询失败！", Toast.LENGTH_SHORT).show();
                             }
                         }
-
-
                     });
                 }
             }

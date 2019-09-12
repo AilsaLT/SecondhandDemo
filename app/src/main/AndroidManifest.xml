@@ -3,19 +3,15 @@
           package="com.ghl.wuhan.secondhand">
 
     <uses-permission android:name="android.permission.INJECT_EVENTS" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
-
+    <!--添加部分-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!--获取网络信息需要在AndroidManifest.xml文件中加入相应的权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
     <!-- if you want to load images from the internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
-
     <!-- if you want to load images from a file OR from the internet -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
     <!-- 访问SD卡的权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 

@@ -3,6 +3,7 @@ package com.ghl.wuhan.secondhand.goods_message;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,8 @@ public class GoodsItemActivity extends AppCompatActivity {
     private ImageView iv_back;//返回
     private ImageView iv_image;
     private TextView tv_goodsId, tv_goodsName, tv_goodsPrice, tv_goodsUnit, tv_goodsQuantity,tv_goodsQq;
-    private ImageView iv_collect;
+//    private ImageView iv_collect;
+    private FloatingActionButton fab;
     private int collectFlag = 2;//收藏标志  0---取消收藏，1---添加收藏, 2--查询
     private int state = 0;     //记录当前状态
     private int lastState = 0;//记录上次状态
@@ -83,7 +85,7 @@ public class GoodsItemActivity extends AppCompatActivity {
         isCollectGoods(collectBO);
 
         //收藏
-        iv_collect.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(lastState == 0) {//未收藏
@@ -143,11 +145,9 @@ public class GoodsItemActivity extends AppCompatActivity {
         tv_goodsQuantity = (TextView) findViewById(R.id.tv_goodsQuantity);
         tv_goodsQq = (TextView) findViewById(R.id.tv_goodsQq);
 
-        iv_collect = (ImageView) findViewById(R.id.iv_collect);//收藏
-
-
+//        iv_collect = (ImageView) findViewById(R.id.iv_collect);//收藏
+        fab = (FloatingActionButton) findViewById(R.id.fab);
     }
-
     //发送OkHttp请求
     private void collectGoods(CollectBO collectBO) {
 
@@ -186,11 +186,14 @@ public class GoodsItemActivity extends AppCompatActivity {
                                     if(collectFlag == 1){
                                         Toast.makeText(GoodsItemActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
                                         state = 1;
-                                        iv_collect.setImageResource(R.drawable.goods_collect_yellow);
+//                                        iv_collect.setImageResource(R.drawable.goods_collect_yellow);
+                                        fab.setImageResource(R.drawable.goods_collect_yellow);
+
                                     }else{
                                         Toast.makeText(GoodsItemActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
                                         state = 0;
-                                        iv_collect.setImageResource(R.drawable.goods_collect_gray);
+//                                        iv_collect.setImageResource(R.drawable.goods_collect_gray);
+                                        fab.setImageResource(R.drawable.goods_collect_gray);
                                     }
                                     lastState = state;
                                 }
@@ -241,11 +244,13 @@ public class GoodsItemActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (flag == 40001){//商品已被收藏
-                                iv_collect.setImageResource(R.drawable.goods_collect_yellow);
+//                                iv_collect.setImageResource(R.drawable.goods_collect_yellow);
+                                fab.setImageResource(R.drawable.goods_collect_yellow);
                                 state = 1;
                                 lastState = state;
                             }else {//未被收藏
-                                iv_collect.setImageResource(R.drawable.goods_collect_gray);
+//                                iv_collect.setImageResource(R.drawable.goods_collect_gray);
+                                fab.setImageResource(R.drawable.goods_collect_gray);
                                 state = 0;
                                 lastState = state;
                             }
