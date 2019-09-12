@@ -300,7 +300,8 @@
                     android:layout_toRightOf="@+id/tv_goodsQq1"
                     android:text="qq"
                     android:textColor="#000"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:textIsSelectable="true"/>
 
             </RelativeLayout>
 

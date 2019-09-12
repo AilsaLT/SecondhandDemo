@@ -119,6 +119,7 @@ public class GoodsItemAdapter extends RecyclerView.Adapter<GoodsItemAdapter.View
         holder.goods_quality.setText( ""+ goods.getQuality() );
         holder.goods_unit.setText( goods.getUnit() );
         holder.goods_qq.setText(goods.getQq());
+
     }
 
     @Override
