@@ -330,7 +330,6 @@ public class find_sale_activity extends AppCompatActivity {
                     }
                 });
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {//回调的方法执行在子线程。
@@ -394,7 +393,7 @@ public class find_sale_activity extends AppCompatActivity {
         intent.putExtra("outputX", 150);//裁剪区的X方向宽
         intent.putExtra("outputY", 150);//裁剪区的Y方向宽
         intent.putExtra("scale", true);//是否保留比例
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
         intent.putExtra("return-data", false);//是否将数据保留在Bitmap中返回dataParcelable相应的Bitmap数据，防止造成OOM
         //判断文件是否存在
         //File saveToFile = ImageUtils.getTempFile();

@@ -45,15 +45,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="6"
-                android:padding="10dp">
+                android:layout_weight="6">
 
 
                 <!--<ImageView-->
@@ -89,8 +87,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:layout_marginTop="10dp"
                 android:background="#eae7e7">
             </View>
@@ -110,7 +107,7 @@
                     android:ellipsize="end"
                     android:lines="1"
                     android:text="goodsid"
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/tv_goodsId1"
@@ -119,14 +116,13 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/v1"
                     android:text="商品编号："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
             </RelativeLayout>
 
             <View
-                android:layout_width="330dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
 
@@ -143,7 +139,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/tv_goodsName1"
                     android:text="goodsname"
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/tv_goodsName1"
@@ -152,15 +148,14 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/v1"
                     android:text="商品名称："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
 
@@ -179,7 +174,7 @@
                     android:gravity="bottom"
                     android:text="￥"
                     android:textColor="#fbf9cc04"
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/tv_goodsPrice"
@@ -199,13 +194,12 @@
                     android:layout_alignBottom="@+id/tv_goodsPrice"
                     android:layout_toRightOf="@+id/v1"
                     android:text="商品单价："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
 
@@ -222,7 +216,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/v1"
                     android:text="商品单位："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
 
                 <TextView
@@ -232,14 +226,13 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/tv_goodsUnit1"
                     android:text="unit"
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
 
@@ -256,7 +249,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/tv_goodsQuantity1"
                     android:text="quanlity"
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/tv_goodsQuantity1"
@@ -266,13 +259,12 @@
                     android:layout_toRightOf="@+id/v1"
                     android:gravity="center"
                     android:text="商品数量："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
 
@@ -289,7 +281,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/v1"
                     android:text="联系方式(qq)："
-                    android:textSize="15sp"/>
+                    android:textSize="18sp"/>
 
 
                 <TextView
@@ -300,15 +292,14 @@
                     android:layout_toRightOf="@+id/tv_goodsQq1"
                     android:text="qq"
                     android:textColor="#000"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textIsSelectable="true"/>
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="10dp"
                 android:background="#eae7e7">
             </View>
         </LinearLayout>

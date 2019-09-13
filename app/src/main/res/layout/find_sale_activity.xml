@@ -47,8 +47,8 @@
         android:layout_weight="3">
         <ImageView
             android:id="@+id/image_touxiang"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerInParent="true"
             android:clickable="true"
             android:background="@drawable/image_photo"/>

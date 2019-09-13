@@ -3,7 +3,7 @@ package com.ghl.wuhan.secondhand.me_activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.ghl.wuhan.secondhand.DO.Goods;
 import com.ghl.wuhan.secondhand.DO.ResponseBuy;
 import com.ghl.wuhan.secondhand.R;
-import com.ghl.wuhan.secondhand.adapter.GoodsItemAdapter;
+import com.ghl.wuhan.secondhand.adapter.GoodsGridAdapter;
 import com.ghl.wuhan.secondhand.util.HttpUtils;
 import com.ghl.wuhan.secondhand.util.NetworkStateUtils;
 import com.google.gson.Gson;
@@ -105,8 +105,8 @@ public class me_boothActivity extends AppCompatActivity {
         //初始化部分
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         springView = (SpringView) findViewById(R.id.springView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(me_boothActivity.this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(me_boothActivity.this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
         iv_networkbad = (ImageView) findViewById(R.id.iv_networkbad);//无网络
         //默认状态是不可见
@@ -207,7 +207,7 @@ public class me_boothActivity extends AppCompatActivity {
                                             Log.i(TAG, "me_boothActivity中allGoodsList.size() " + allGoodsList.size());
                                         }
                                     }
-                                    GoodsItemAdapter adapter = new GoodsItemAdapter(me_boothActivity.this, allGoodsList);
+                                    GoodsGridAdapter adapter = new GoodsGridAdapter(me_boothActivity.this, allGoodsList);
                                     recyclerView.setAdapter(adapter);
                                     recyclerView.scrollToPosition(adapter.getItemCount() - 1);//自动滑动到底部
                                 }
@@ -228,7 +228,7 @@ public class me_boothActivity extends AppCompatActivity {
                                         }
                                     }
                                     allGoodsList = newResultGoodsList;
-                                    GoodsItemAdapter adapter = new GoodsItemAdapter(me_boothActivity.this, allGoodsList);
+                                    GoodsGridAdapter adapter = new GoodsGridAdapter(me_boothActivity.this, allGoodsList);
                                     recyclerView.setAdapter(adapter);
                                     //recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                                 }
