@@ -219,6 +219,11 @@ public class find_buy_activity extends AppCompatActivity {
                     //设置照片存储文件及剪切图片
                     File saveFile = ImageUtils.getTempFile();
                     filePath = ImageUtils.getTempFile();
+//                    Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
+//                    //把裁剪后的图片展示出来
+//                    image_touxiang.setImageBitmap(bitmap);
+//                    //拍完照后，上传图片对象
+//                    COSPictureUtils.initCOS(find_buy_activity.this);
                     startImageCrop(saveFile, imageUri);
                 }
                 break;
@@ -378,8 +383,8 @@ public class find_buy_activity extends AppCompatActivity {
         intent.putExtra("crop", "true");//
         intent.putExtra("aspectX", 1);//X方向上的比例
         intent.putExtra("aspectY", 1);//Y方向上的比例
-        intent.putExtra("outputX", 150);//裁剪区的X方向宽
-        intent.putExtra("outputY", 150);//裁剪区的Y方向宽
+        intent.putExtra("outputX", 500);//裁剪区的X方向宽
+        intent.putExtra("outputY", 500);//裁剪区的Y方向宽
         intent.putExtra("scale", true);//是否保留比例
         intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
         intent.putExtra("return-data", false);//是否将数据保留在Bitmap中返回dataParcelable相应的Bitmap数据，防止造成OOM

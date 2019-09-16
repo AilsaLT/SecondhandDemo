@@ -102,7 +102,6 @@ public class GoodsGridAdapter extends RecyclerView.Adapter<GoodsGridAdapter.View
         //        byte[] img = goods.getGoodsImg();
         String pictureUrl = goods.getPictureUrl();
 
-
         //若图片Url为空
         if(pictureUrl == null){
 

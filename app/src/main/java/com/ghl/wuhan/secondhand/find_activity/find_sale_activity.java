@@ -89,9 +89,6 @@ public class find_sale_activity extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    //将拍摄的照片的照片显示出来
-                    //需要对拍摄的照片进行处理编辑
-                    //拍照成功的话，就调用BitmapFactory的decodeStream()方法把图片解析成Bitmap对象，然后显示
                     Log.i(TAG, "onActivityResult TakePhoto : " + imageUri);
                     //设置照片存储文件及剪切图片
                     File saveFile = ImageUtils.getTempFile();
@@ -118,7 +115,6 @@ public class find_sale_activity extends AppCompatActivity {
             case CROP_IMAGE:
                 if (resultCode == RESULT_OK) {
                     Log.i(TAG, "onActivityResult: CROP_IMAGE" + "进入了CROP");
-
                     Bitmap bitmap = BitmapFactory.decodeFile(filePath.toString());
                     //把裁剪后的图片展示出来
                     image_touxiang.setImageBitmap(bitmap);
@@ -377,6 +373,7 @@ public class find_sale_activity extends AppCompatActivity {
     /**
      * 图片裁剪
      */
+
     private void startImageCrop(File saveToFile, Uri uri) {
         if (uri == null) {
             return;
@@ -390,8 +387,8 @@ public class find_sale_activity extends AppCompatActivity {
         intent.putExtra("crop", "true");//
         intent.putExtra("aspectX", 1);//X方向上的比例
         intent.putExtra("aspectY", 1);//Y方向上的比例
-        intent.putExtra("outputX", 150);//裁剪区的X方向宽
-        intent.putExtra("outputY", 150);//裁剪区的Y方向宽
+        intent.putExtra("outputX", 500);//裁剪区的X方向宽
+        intent.putExtra("outputY", 500);//裁剪区的Y方向宽
         intent.putExtra("scale", true);//是否保留比例
         intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
         intent.putExtra("return-data", false);//是否将数据保留在Bitmap中返回dataParcelable相应的Bitmap数据，防止造成OOM

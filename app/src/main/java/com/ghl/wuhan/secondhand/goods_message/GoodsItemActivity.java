@@ -1,11 +1,15 @@
 package com.ghl.wuhan.secondhand.goods_message;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +40,8 @@ public class GoodsItemActivity extends AppCompatActivity {
     private int state = 0;     //记录当前状态
     private int lastState = 0;//记录上次状态
     private String token,userid,goodsID;
+    private ImageDialog dialog;
+    private Goods goods;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +55,7 @@ public class GoodsItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         //从intent取出bundle
         Bundle bundle = intent.getExtras();
-        Goods goods = (Goods) bundle.getSerializable("goods");
+        goods = (Goods) bundle.getSerializable("goods");
 
         //将正在展示的商品的goodID存储起来，供收藏商品使用
         SharedPreferences.Editor editor = getSharedPreferences("collect",MODE_PRIVATE).edit();
@@ -107,6 +113,14 @@ public class GoodsItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        iv_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new ImageDialog(GoodsItemActivity.this,goods.getPictureUrl());
+                dialog.show();
             }
         });
     }
@@ -260,5 +274,32 @@ public class GoodsItemActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    class ImageDialog extends Dialog {
+        Context context;
+        String pictureUrl;
+        public ImageDialog(@NonNull Context context, String pictureUrl) {
+            super(context);
+            this.context = context;
+            this.pictureUrl = pictureUrl;
+
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            View view = LayoutInflater.from(context).inflate(R.layout.big_image,null);
+            setContentView(view);
+            ImageView imageView = view.findViewById(R.id.bigImage);
+            Glide.with(context).load(pictureUrl).into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 }

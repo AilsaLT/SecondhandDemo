@@ -33,6 +33,7 @@ import static com.ghl.wuhan.secondhand.R.id.img_goodsImg;
 public class GoodsItemAdapter extends RecyclerView.Adapter<GoodsItemAdapter.ViewHolder> {
     private List<Goods> mgoodsList;
     private Context mcontext;
+//    private ImageDialog dialog;
 
 
     //内部类ViewHolder
@@ -60,6 +61,32 @@ public class GoodsItemAdapter extends RecyclerView.Adapter<GoodsItemAdapter.View
             goods_qq = (TextView) view.findViewById(R.id.tv_goodsQq);
         }
     }
+//    //内部类
+//    class ImageDialog extends Dialog {
+//        Context context;
+//        String pictureUrl;
+//        public ImageDialog(@NonNull Context context,String pictureUrl) {
+//            super(context);
+//            this.context = context;
+//            this.pictureUrl = pictureUrl;
+//
+//        }
+//
+//        @Override
+//        protected void onCreate(Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            View view = LayoutInflater.from(context).inflate(R.layout.big_image,null);
+//            setContentView(view);
+//            ImageView imageView = view.findViewById(R.id.bigImage);
+//            Glide.with(context).load(pictureUrl).into(imageView);
+//            imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.dismiss();
+//                }
+//            });
+//        }
+//    }
 
     //构造函数
     //这个方法用于把眼展示的数据源传进来，并赋值给一份全局变量mgoodsList,后续的操作都基于这个数据源
@@ -91,6 +118,17 @@ public class GoodsItemAdapter extends RecyclerView.Adapter<GoodsItemAdapter.View
                 v.getContext().startActivity(intent);
             }
         });
+
+//        //点击商品详情中的imageView，将显示大图
+//        holder.goods_img.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position  =  holder.getAdapterPosition();
+//                Goods goods   =  mgoodsList.get(position);
+//                dialog = new ImageDialog(mcontext,goods.getPictureUrl());
+//                dialog.show();
+//            }
+//        });
         //最后将ViewHolder的实例返回
         return holder;
     }
